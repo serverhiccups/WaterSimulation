@@ -4,7 +4,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
 
 public class Main extends JFrame {
 
@@ -31,13 +30,13 @@ public class Main extends JFrame {
                 System.err.println("The timer was fired");
                 switch (i % 3) {
                     case 0:
-                        myRectangle.costumes.get(0).setOffsetMode(JSpriteCenterMode.CENTER);
+                        myRectangle.getVisual(myRectangle.getCurrentVisual()).setOffsetMode(JSpriteOffsetMode.CENTER);
                         break;
                     case 1:
-                        myRectangle.costumes.get(0).setOffsetMode(JSpriteCenterMode.TOP_RIGHT);
+                        myRectangle.getVisual(myRectangle.getCurrentVisual()).setOffsetMode(JSpriteOffsetMode.TOP_RIGHT);
                         break;
                     case 2:
-                        myRectangle.costumes.get(0).setOffsetMode(JSpriteCenterMode.BOTTOM_LEFT);
+                        myRectangle.getVisual(myRectangle.getCurrentVisual()).setOffsetMode(JSpriteOffsetMode.BOTTOM_LEFT);
                         break;
                 }
                 canvas.repaint();

@@ -1,6 +1,5 @@
 package com.hiccup01;
 
-import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 
@@ -38,15 +37,14 @@ public class JSpriteCanvas extends Canvas {
 		for(JSpriteContainer c : this.spriteStack) {
 			JSprite s = c.sprite;
 			if(!s.visible) continue;
-			JSpriteCostume costume = s.costumes.get(s.currentCostume);
-			g.drawImage(costume.costume, s.xPosition - costume.xOffset, s.yPosition - costume.yOffset, null);
+			JSpriteVisual visual = s.getVisual(s.getCurrentVisual());
+			visual.draw(g, s.xPosition - visual.getXOffset(), s.yPosition - visual.getYOffset());
 			if(this.debugMode) {
 				g.setColor(Color.red);
 				g.drawRect(s.xPosition, s.yPosition, 1, 1);
 				g.setColor(Color.green);
-				g.drawRect(s.xPosition - costume.xOffset, s.yPosition - costume.yOffset, 1, 1);
+				g.drawRect(s.xPosition - visual.getXOffset(), s.yPosition - visual.getYOffset(), 1, 1);
 			}
 		}
-		System.err.println("The canvas was painted.");
 	}
 }

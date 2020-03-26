@@ -5,11 +5,11 @@ import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 
-public class JSpriteCostume {
+public class JSpriteCostume implements JSpriteVisual {
 	Image costume;
-	int xOffset; // These offsets allow us to have per-costume offsets that allow us to have sprite x and y be the center.
-	int yOffset;
-	private JSpriteCenterMode offsetMode = JSpriteCenterMode.CENTER;
+	private int xOffset; // These offsets allow us to have per-costume offsets that allow us to have sprite x and y be the center.
+	private int yOffset;
+	private JSpriteOffsetMode offsetMode = JSpriteOffsetMode.CENTER;
 	public JSpriteCostume(String filename) throws IOException {
 		this.costume = ImageIO.read(new File(filename));
 		this.updateOffsets();
@@ -20,19 +20,34 @@ public class JSpriteCostume {
 		this.updateOffsets();
 	}
 
-	public JSpriteCenterMode getOffsetMode() {
+	public JSpriteOffsetMode getOffsetMode() {
 		return this.offsetMode;
 	}
 
-	public void setOffsetMode(JSpriteCenterMode offsetMode) {
+	public void setOffsetMode(JSpriteOffsetMode offsetMode) {
 		this.offsetMode = offsetMode;
 		this.updateOffsets();
 	}
 
+	@Override
+	public void draw(Graphics g, int x, int y) {
+		g.drawImage(this.costume, x, y, null);
+	}
+
+	@Override
+	public int getWidth() {
+		return this.costume.getWidth(null);
+	}
+
+	@Override
+	public int getHeight() {
+		return this.costume.getHeight(null);
+	}
+
 	private void updateOffsets() {
-		int height = this.costume.getHeight(null);
-		int width = this.costume.getWidth(null);
-		switch (this.offsetMode) {
+		int height = this.getHeight();
+		int width = this.getWidth();
+		switch (this.getOffsetMode()) {
 			case CENTER:
 				this.xOffset = width / 2;
 				this.yOffset = height / 2;
@@ -46,5 +61,15 @@ public class JSpriteCostume {
 				this.yOffset = height;
 				break;
 		}
+	}
+
+	@Override
+	public int getXOffset() {
+		return this.xOffset;
+	}
+
+	@Override
+	public int getYOffset() {
+		return this.yOffset;
 	}
 }
