@@ -44,6 +44,6 @@ public class Main extends JFrame {
                 this.i++;
             }
         };
-        new Timer(100, p).start();
+        new Timer(1000, p).start();
     }
 }

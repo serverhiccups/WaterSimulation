@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 public class JSpriteCanvas extends Canvas {
 	private ArrayList<JSpriteContainer> spriteStack = new ArrayList<>();
+	public boolean debugMode = false;
 
 	public JSpriteCanvas() {
 
@@ -39,6 +40,12 @@ public class JSpriteCanvas extends Canvas {
 			if(!s.visible) continue;
 			JSpriteCostume costume = s.costumes.get(s.currentCostume);
 			g.drawImage(costume.costume, s.xPosition - costume.xOffset, s.yPosition - costume.yOffset, null);
+			if(this.debugMode) {
+				g.setColor(Color.red);
+				g.drawRect(s.xPosition, s.yPosition, 1, 1);
+				g.setColor(Color.green);
+				g.drawRect(s.xPosition - costume.xOffset, s.yPosition - costume.yOffset, 1, 1);
+			}
 		}
 		System.err.println("The canvas was painted.");
 	}
