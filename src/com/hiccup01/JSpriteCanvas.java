@@ -38,7 +38,7 @@ public class JSpriteCanvas extends Canvas {
 			JSprite s = c.sprite;
 			if(!s.visible) continue;
 			JSpriteCostume costume = s.costumes.get(s.currentCostume);
-			g.drawImage(costume.costume, s.xPosition, s.yPosition, null);
+			g.drawImage(costume.costume, s.xPosition - costume.xOffset, s.yPosition - costume.yOffset, null);
 		}
 		System.err.println("The canvas was painted.");
 	}

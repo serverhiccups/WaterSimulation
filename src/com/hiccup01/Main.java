@@ -18,22 +18,32 @@ public class Main extends JFrame {
         this.getContentPane().setPreferredSize(new Dimension(600, 400));
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         JSpriteCanvas canvas = new JSpriteCanvas();
-        JSprite myRectangle = new JSprite(0, 0, new JSpriteCostume("rect.png"));
+        JSprite myRectangle = new JSprite(100, 100, new JSpriteCostume("rect.png"));
         canvas.addSprite(myRectangle, 0);
         this.add(canvas);
         this.pack();
         this.toFront();
         this.setVisible(true);
         ActionListener p = new ActionListener() {
+            int i = 0;
             @Override
             public void actionPerformed(ActionEvent e) {
                 System.err.println("The timer was fired");
-                myRectangle.xPosition += 1;
-                myRectangle.yPosition += 1;
-                myRectangle.visible = !myRectangle.visible;
+                switch (i % 3) {
+                    case 0:
+                        myRectangle.costumes.get(0).setOffsetMode(JSpriteCenterMode.CENTER);
+                        break;
+                    case 1:
+                        myRectangle.costumes.get(0).setOffsetMode(JSpriteCenterMode.TOP_RIGHT);
+                        break;
+                    case 2:
+                        myRectangle.costumes.get(0).setOffsetMode(JSpriteCenterMode.BOTTOM_LEFT);
+                        break;
+                }
                 canvas.repaint();
+                this.i++;
             }
         };
-        new Timer(10, p).start();
+        new Timer(100, p).start();
     }
 }
