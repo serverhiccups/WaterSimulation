@@ -17,7 +17,8 @@ public class Main extends JFrame {
         this.getContentPane().setPreferredSize(new Dimension(600, 400));
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         JSpriteCanvas canvas = new JSpriteCanvas();
-        JSprite myRectangle = new JSprite(100, 100, new JSpriteCostume("rect.png"));
+        JSprite myRectangle = new JSprite(-20, -20, new JSpriteCostume("rect.png"));
+        myRectangle.getVisual(myRectangle.getCurrentVisual()).setOffsetMode(JSpriteOffsetMode.TOP_RIGHT);
         canvas.addSprite(myRectangle, 0);
         this.add(canvas);
         this.pack();
@@ -28,21 +29,22 @@ public class Main extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 System.err.println("The timer was fired");
-                switch (i % 3) {
-                    case 0:
-                        myRectangle.getVisual(myRectangle.getCurrentVisual()).setOffsetMode(JSpriteOffsetMode.CENTER);
-                        break;
-                    case 1:
-                        myRectangle.getVisual(myRectangle.getCurrentVisual()).setOffsetMode(JSpriteOffsetMode.TOP_RIGHT);
-                        break;
-                    case 2:
-                        myRectangle.getVisual(myRectangle.getCurrentVisual()).setOffsetMode(JSpriteOffsetMode.BOTTOM_LEFT);
-                        break;
-                }
-                canvas.repaint();
-                this.i++;
+//                switch (i % 3) {
+//                    case 0:
+//                        myRectangle.getVisual(myRectangle.getCurrentVisual()).setOffsetMode(JSpriteOffsetMode.CENTER);
+//                        break;
+//                    case 1:
+//                        myRectangle.getVisual(myRectangle.getCurrentVisual()).setOffsetMode(JSpriteOffsetMode.TOP_RIGHT);
+//                        break;
+//                    case 2:
+//                        myRectangle.getVisual(myRectangle.getCurrentVisual()).setOffsetMode(JSpriteOffsetMode.BOTTOM_LEFT);
+//                        break;
+//                }
+//                canvas.repaint();
+//                this.i++;
+	            canvas.scroll(-1, -1);
             }
         };
-        new Timer(1000, p).start();
+        new Timer(10, p).start();
     }
 }

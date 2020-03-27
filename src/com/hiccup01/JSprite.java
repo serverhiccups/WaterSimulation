@@ -8,7 +8,8 @@ public class JSprite {
 	public int yPosition;
 	private HashMap<Integer, JSpriteVisual> visuals = new HashMap<>();
 	int currentVisual;
-	public JSprite(int x, int y, JSpriteCostume firstVisual) {
+	private JSpriteCoordinateType coordinateType = JSpriteCoordinateType.VIRTUAL;
+	public JSprite(int x, int y, JSpriteVisual firstVisual) {
 		visuals.put(0, firstVisual);
 		this.currentVisual = 0;
 		this.xPosition = x;
@@ -29,5 +30,13 @@ public class JSprite {
 
 	public void setVisual(int id, JSpriteVisual v) {
 		this.visuals.put(id, v);
+	}
+
+	public JSpriteCoordinateType getCoordinateType() {
+		return coordinateType;
+	}
+
+	public void setCoordinateType(JSpriteCoordinateType coordinateType) {
+		this.coordinateType = coordinateType;
 	}
 }
