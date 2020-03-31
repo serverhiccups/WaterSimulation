@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
 
 public class Main extends JFrame {
 
@@ -17,34 +18,63 @@ public class Main extends JFrame {
         this.getContentPane().setPreferredSize(new Dimension(600, 400));
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         JSpriteCanvas canvas = new JSpriteCanvas();
-        JSprite myRectangle = new JSprite(-20, -20, new JSpriteCostume("rect.png"));
-        myRectangle.getVisual(myRectangle.getCurrentVisual()).setOffsetMode(JSpriteOffsetMode.TOP_RIGHT);
+        JSprite myRectangle = new JSprite(0, 0, new JSpriteCostume("rect.png"));
+        myRectangle.setVisual(1, new JSpriteCostume("red-circle.png"));
+        myRectangle.getVisual(0).setOffsetMode(JSpriteOffsetMode.TOP_RIGHT);
+        myRectangle.getVisual(1).setOffsetMode(JSpriteOffsetMode.TOP_RIGHT);
+        myRectangle.addMouseHandler(new JSpriteMouseHandler() {
+            @Override
+            public boolean scrollEvent(int amount) {
+                return false;
+            }
+
+            @Override
+            public boolean mouseClicked(MouseEvent m) {
+                System.err.println("Mouse clicked");
+                return true;
+            }
+
+            @Override
+            public boolean mouseEntered(MouseEvent m) {
+                return false;
+            }
+
+            @Override
+            public boolean mouseExited(MouseEvent m) {
+                myRectangle.setCurrentVisual(0);
+                canvas.repaint();
+                return true;
+            }
+
+            @Override
+            public boolean mousePressed(MouseEvent m) {
+                System.err.println("Mouse pressed");
+                myRectangle.setCurrentVisual(1);
+                canvas.repaint();
+                return true;
+            }
+
+            @Override
+            public boolean mouseReleased(MouseEvent m) {
+                myRectangle.setCurrentVisual(0);
+                canvas.repaint();
+                return true;
+            }
+
+            @Override
+            public boolean mouseDragged(MouseEvent m) {
+                return false;
+            }
+
+            @Override
+            public boolean mouseMoved(MouseEvent m) {
+                return false;
+            }
+        });
         canvas.addSprite(myRectangle, 0);
         this.add(canvas);
         this.pack();
         this.toFront();
         this.setVisible(true);
-        ActionListener p = new ActionListener() {
-            int i = 0;
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.err.println("The timer was fired");
-//                switch (i % 3) {
-//                    case 0:
-//                        myRectangle.getVisual(myRectangle.getCurrentVisual()).setOffsetMode(JSpriteOffsetMode.CENTER);
-//                        break;
-//                    case 1:
-//                        myRectangle.getVisual(myRectangle.getCurrentVisual()).setOffsetMode(JSpriteOffsetMode.TOP_RIGHT);
-//                        break;
-//                    case 2:
-//                        myRectangle.getVisual(myRectangle.getCurrentVisual()).setOffsetMode(JSpriteOffsetMode.BOTTOM_LEFT);
-//                        break;
-//                }
-//                canvas.repaint();
-//                this.i++;
-	            canvas.scroll(-1, -1);
-            }
-        };
-        new Timer(10, p).start();
     }
 }

@@ -4,13 +4,17 @@ import java.awt.*;
 import java.util.ArrayList;
 
 public class JSpriteCanvas extends Canvas {
-	private ArrayList<JSpriteContainer> spriteStack = new ArrayList<>();
+	public ArrayList<JSpriteContainer> spriteStack = new ArrayList<>();
+	private JSpriteMouseEventHandler eventHandler;
+	public JSpriteMouseHandler defaultHandler;
 	public boolean debugMode = false;
-	private int virtualX = 0;
-	private int virtualY = 0;
+	public int virtualX = 0;
+	public int virtualY = 0;
 
 	public JSpriteCanvas() {
-
+		this.eventHandler = new JSpriteMouseEventHandler(this);
+		this.addMouseListener(this.eventHandler);
+		this.addMouseMotionListener(this.eventHandler);
 	}
 
 	private JSpriteContainer findSpriteById(int id) {
@@ -45,6 +49,10 @@ public class JSpriteCanvas extends Canvas {
 		this.scrollX(x);
 		this.scrollY(y);
 		this.repaint();
+	}
+
+	public void setDefaultMouseHandler(JSpriteMouseHandler h) {
+		this.defaultHandler = h;
 	}
 
 	@Override

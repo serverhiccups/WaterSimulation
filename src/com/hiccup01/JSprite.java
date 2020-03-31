@@ -1,5 +1,6 @@
 package com.hiccup01;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class JSprite {
@@ -7,6 +8,7 @@ public class JSprite {
 	public int xPosition;
 	public int yPosition;
 	private HashMap<Integer, JSpriteVisual> visuals = new HashMap<>();
+	public ArrayList<JSpriteMouseHandler> mouseHandlers = new ArrayList<>();
 	int currentVisual;
 	private JSpriteCoordinateType coordinateType = JSpriteCoordinateType.VIRTUAL;
 	public JSprite(int x, int y, JSpriteVisual firstVisual) {
@@ -37,6 +39,14 @@ public class JSprite {
 	}
 
 	public void setCoordinateType(JSpriteCoordinateType coordinateType) {
-		this.coordinateType = coordinateType;
+		if(coordinateType != JSpriteCoordinateType.RELATIVE) this.coordinateType = coordinateType;
+	}
+
+	public void addMouseHandler(JSpriteMouseHandler m) {
+		this.mouseHandlers.add(m);
+	}
+
+	public void removeMouseHandler() {
+		this.mouseHandlers.remove(this.mouseHandlers.size() - 1);
 	}
 }

@@ -2,11 +2,13 @@ package com.hiccup01;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.awt.image.PixelGrabber;
 import java.io.File;
 import java.io.IOException;
 
 public class JSpriteCostume implements JSpriteVisual {
-	Image costume;
+	BufferedImage costume;
 	private int xOffset; // These offsets allow us to have per-costume offsets that allow us to have sprite x and y be the center.
 	private int yOffset;
 	private JSpriteOffsetMode offsetMode = JSpriteOffsetMode.CENTER;
@@ -15,7 +17,7 @@ public class JSpriteCostume implements JSpriteVisual {
 		this.updateOffsets();
 	}
 
-	public JSpriteCostume(Image image) {
+	public JSpriteCostume(BufferedImage image) {
 		this.costume = image;
 		this.updateOffsets();
 	}
@@ -32,6 +34,17 @@ public class JSpriteCostume implements JSpriteVisual {
 	@Override
 	public void draw(Graphics g, int x, int y) {
 		g.drawImage(this.costume, x, y, null);
+	}
+
+	@Override
+	public boolean isInBounds(int x, int y) {
+		if(x < 0 || y < 0) return false;
+		if(x > this.getWidth() - 1 || y > this.getHeight() - 1) return false;
+		if(((this.costume.getRGB(x, y) >> 24) & 0xFF) == 0){
+			System.err.println("because rgb " + this.costume.getRGB(x, y));
+			return false;
+		}
+		return true;
 	}
 
 	@Override
