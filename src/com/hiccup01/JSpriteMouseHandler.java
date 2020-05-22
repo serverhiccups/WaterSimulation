@@ -3,13 +3,13 @@ package com.hiccup01;
 import java.awt.event.MouseEvent;
 
 public interface JSpriteMouseHandler {
-	JSpriteCoordinateType coordianateType = JSpriteCoordinateType.RELATIVE;
+	JSpriteCoordinateType coordinateType = JSpriteCoordinateType.RELATIVE;
 	boolean scrollEvent(int amount);
-	boolean mouseClicked(MouseEvent m);
-	boolean mouseEntered(MouseEvent m);
-	boolean mouseExited(MouseEvent m);
-	boolean mousePressed(MouseEvent m);
-	boolean mouseReleased(MouseEvent m);
-	boolean mouseDragged(MouseEvent m);
-	boolean mouseMoved(MouseEvent m);
+	boolean mouseClicked(JSpriteMouseEvent m);
+	boolean mouseEntered(JSpriteMouseEvent m);
+	boolean mouseExited(JSpriteMouseEvent m);
+	boolean mousePressed(JSpriteMouseEvent m);
+	boolean mouseReleased(JSpriteMouseEvent m);
+	boolean mouseDragged(JSpriteMouseEvent m);
+	boolean mouseMoved(JSpriteMouseEvent m);
 }

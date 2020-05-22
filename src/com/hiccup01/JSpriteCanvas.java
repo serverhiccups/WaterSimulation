@@ -32,7 +32,7 @@ public class JSpriteCanvas extends Canvas {
 
 	public JSprite removeSprite(int id) throws JSpriteException {
 		JSpriteContainer sprite = this.findSpriteById(id);
-		if(sprite == null) throw new JSpriteException("Can't remove non-existant sprite with id " + id);
+		if(sprite == null) throw new JSpriteException("Can't remove non-existent sprite with id " + id);
 		this.spriteStack.remove(sprite);
 		return sprite.sprite;
 	}

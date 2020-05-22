@@ -49,4 +49,12 @@ public class JSprite {
 	public void removeMouseHandler() {
 		this.mouseHandlers.remove(this.mouseHandlers.size() - 1);
 	}
+
+	public int getUpperLeftX() {
+		return this.getVisual(this.getCurrentVisual()).getXOffset();
+	}
+
+	public int getUpperLeftY() {
+		return this.getVisual(this.getCurrentVisual()).getYOffset();
+	}
 }
