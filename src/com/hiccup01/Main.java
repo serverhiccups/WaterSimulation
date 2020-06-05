@@ -16,11 +16,10 @@ public class Main extends JFrame {
         this.getContentPane().setPreferredSize(new Dimension(600, 400));
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         JSpriteCanvas canvas = new JSpriteCanvas();
-        JSprite myRectangle = new JSprite(0, 0, new JSpriteCostume("rect.png"));
-        myRectangle.setVisual(1, new JSpriteCostume("red-circle.png"));
-        myRectangle.getVisual(0).setOffsetMode(JSpriteOffsetMode.TOP_RIGHT);
-        myRectangle.getVisual(1).setOffsetMode(JSpriteOffsetMode.TOP_RIGHT);
-        myRectangle.addMouseHandler(new JSpriteMouseHandler() {
+        canvas.debugMode = true;
+        JSprite myRectangle = new JSprite(100, 100, new JSpriteCostume("rect.png"));
+        myRectangle.getVisual(0).setOffsetMode(JSpriteOffsetMode.CENTER);
+        JSpriteMouseHandler mouseHandle = new JSpriteMouseHandler() {
             @Override
             public boolean scrollEvent(int amount) {
                 return false;
@@ -28,36 +27,78 @@ public class Main extends JFrame {
 
             @Override
             public boolean mouseClicked(JSpriteMouseEvent m) {
-                System.err.println("Mouse clicked");
-                return true;
+                return false;
             }
 
             @Override
             public boolean mouseEntered(JSpriteMouseEvent m) {
-            	System.err.println("the mouse has entered");
-            	return true;
+            	return false;
             }
 
             @Override
             public boolean mouseExited(JSpriteMouseEvent m) {
-                myRectangle.setCurrentVisual(0);
-                canvas.repaint();
-                return true;
+                return false;
             }
 
             @Override
             public boolean mousePressed(JSpriteMouseEvent m) {
-                System.err.println("Mouse pressed");
-                myRectangle.setCurrentVisual(1);
-                canvas.repaint();
-                return true;
+                return false;
             }
 
             @Override
             public boolean mouseReleased(JSpriteMouseEvent m) {
-                myRectangle.setCurrentVisual(0);
+                return false;
+            }
+
+            @Override
+            public boolean mouseDragged(JSpriteMouseEvent m) {
+//                System.err.println("got a drag event");
+//                myRectangle.xPosition = m.getX(JSpriteCoordinateType.VIRTUAL);
+//                myRectangle.yPosition = m.getY(JSpriteCoordinateType.VIRTUAL);
+//                canvas.repaint();
+//                return true;
+	            return false;
+            }
+
+            @Override
+            public boolean mouseMoved(JSpriteMouseEvent m) {
+                myRectangle.xPosition = m.getX(JSpriteCoordinateType.VIRTUAL);
+                myRectangle.yPosition = m.getY(JSpriteCoordinateType.VIRTUAL);
                 canvas.repaint();
                 return true;
+            }
+        };
+        myRectangle.addMouseHandler(mouseHandle);
+        canvas.setDefaultMouseHandler(new JSpriteMouseHandler() {
+
+            @Override
+            public boolean scrollEvent(int amount) {
+                return false;
+            }
+
+            @Override
+            public boolean mouseClicked(JSpriteMouseEvent m) {
+                return false;
+            }
+
+            @Override
+            public boolean mouseEntered(JSpriteMouseEvent m) {
+                return false;
+            }
+
+            @Override
+            public boolean mouseExited(JSpriteMouseEvent m) {
+                return false;
+            }
+
+            @Override
+            public boolean mousePressed(JSpriteMouseEvent m) {
+                return false;
+            }
+
+            @Override
+            public boolean mouseReleased(JSpriteMouseEvent m) {
+                return false;
             }
 
             @Override
@@ -67,6 +108,10 @@ public class Main extends JFrame {
 
             @Override
             public boolean mouseMoved(JSpriteMouseEvent m) {
+            	
+            	if(canvas.eventHandler.findSpriteAt(m.getX(JSpriteCoordinateType.VIRTUAL), m.getY(JSpriteCoordinateType.VIRTUAL)) != null) {
+            	    System.err.println("Over a sprite");
+                }
                 return false;
             }
         });

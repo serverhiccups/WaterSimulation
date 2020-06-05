@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 public class JSpriteCanvas extends Canvas {
 	public ArrayList<JSpriteContainer> spriteStack = new ArrayList<>();
-	private JSpriteMouseEventHandler eventHandler;
+	public JSpriteMouseEventHandler eventHandler;
 	public JSpriteMouseHandler defaultHandler;
 	public boolean debugMode = false;
 	public int virtualX = 0;

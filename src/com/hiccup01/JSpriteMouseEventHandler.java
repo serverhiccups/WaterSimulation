@@ -16,14 +16,19 @@ public class JSpriteMouseEventHandler implements MouseListener, MouseMotionListe
 		this.canvas = c;
 	}
 
-	private JSprite findSpriteAt(int x, int y) {
+	// x and y are virtual coordinates
+	public JSprite findSpriteAt(int x, int y) {
 //		System.err.println("Finding sprite at " + x + ", " + y);
 		ListIterator<JSpriteContainer> li = this.canvas.spriteStack.listIterator(this.canvas.spriteStack.size());
 		while(li.hasPrevious()) {
 			JSpriteContainer c = li.previous();
 			JSprite s = c.sprite;
 			JSpriteVisual visual = s.getVisual(s.getCurrentVisual());
-			if(visual.isInBounds(x - s.xPosition + visual.getXOffset(), y - s.yPosition - visual.getYOffset()) && s.visible) {
+//			int rx = x - s.xPosition + visual.getXOffset();
+//			int ry = y - s.yPosition + visual.getYOffset();
+//			System.err.println("Relative position is :" + rx + ", " + ry);
+			if(visual.isInBounds(x - s.xPosition + visual.getXOffset(), y - s.yPosition + visual.getYOffset()) && s.visible) {
+				System.out.println(s);
 				return s;
 			}
 		}
@@ -86,6 +91,7 @@ public class JSpriteMouseEventHandler implements MouseListener, MouseMotionListe
 					status = next.mouseReleased(e);
 					break;
 				case MOUSE_MOVE:
+//					System.err.println("Delivering move event to sprite");
 					status = next.mouseMoved(e);
 					break;
 				case MOUSE_DRAG:
@@ -124,6 +130,7 @@ public class JSpriteMouseEventHandler implements MouseListener, MouseMotionListe
 						this.canvas.defaultHandler.mouseReleased(e);
 						break;
 					case MOUSE_MOVE:
+//						System.err.println("Delivering a move event to the default handler");
 						this.canvas.defaultHandler.mouseMoved(e);
 						break;
 					case MOUSE_DRAG:
@@ -203,12 +210,14 @@ public class JSpriteMouseEventHandler implements MouseListener, MouseMotionListe
 
 	@Override
 	public void mouseDragged(MouseEvent e) {
+//		System.err.println("handler got a drag event");
 		this.createEnterExitEvents(e);
 		this.deliverEvent(JSpriteMouseEventType.MOUSE_DRAG, e);
 	}
 
 	@Override
 	public void mouseMoved(MouseEvent e) {
+		System.err.println("got moved event at " + e.getX() + ", " + e.getY());
 		// Here we have to do some extra processing here so that we can create mouseEntered and mouseExited events that work on sprite boundaries.
 		this.createEnterExitEvents(e);
 		this.deliverEvent(JSpriteMouseEventType.MOUSE_MOVE, e);
