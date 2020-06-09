@@ -24,11 +24,7 @@ public class JSpriteMouseEventHandler implements MouseListener, MouseMotionListe
 			JSpriteContainer c = li.previous();
 			JSprite s = c.sprite;
 			JSpriteVisual visual = s.getVisual(s.getCurrentVisual());
-//			int rx = x - s.xPosition + visual.getXOffset();
-//			int ry = y - s.yPosition + visual.getYOffset();
-//			System.err.println("Relative position is :" + rx + ", " + ry);
 			if(visual.isInBounds(x - s.xPosition + visual.getXOffset(), y - s.yPosition + visual.getYOffset()) && s.visible) {
-				System.out.println(s);
 				return s;
 			}
 		}
@@ -217,7 +213,6 @@ public class JSpriteMouseEventHandler implements MouseListener, MouseMotionListe
 
 	@Override
 	public void mouseMoved(MouseEvent e) {
-		System.err.println("got moved event at " + e.getX() + ", " + e.getY());
 		// Here we have to do some extra processing here so that we can create mouseEntered and mouseExited events that work on sprite boundaries.
 		this.createEnterExitEvents(e);
 		this.deliverEvent(JSpriteMouseEventType.MOUSE_MOVE, e);

@@ -57,7 +57,6 @@ public class JSpriteCanvas extends Canvas {
 
 	@Override
 	public void paint(Graphics g) {
-		super.paint(g);
 		for(JSpriteContainer c : this.spriteStack) {
 			JSprite s = c.sprite;
 			if(!s.visible) continue;

@@ -32,7 +32,8 @@ public class Main extends JFrame {
 
             @Override
             public boolean mouseEntered(JSpriteMouseEvent m) {
-            	return false;
+                System.err.println("Entering the sprite");
+                return true;
             }
 
             @Override
@@ -52,11 +53,6 @@ public class Main extends JFrame {
 
             @Override
             public boolean mouseDragged(JSpriteMouseEvent m) {
-//                System.err.println("got a drag event");
-//                myRectangle.xPosition = m.getX(JSpriteCoordinateType.VIRTUAL);
-//                myRectangle.yPosition = m.getY(JSpriteCoordinateType.VIRTUAL);
-//                canvas.repaint();
-//                return true;
 	            return false;
             }
 
@@ -66,6 +62,7 @@ public class Main extends JFrame {
                 myRectangle.yPosition = m.getY(JSpriteCoordinateType.VIRTUAL);
                 canvas.repaint();
                 return true;
+//	            return false;
             }
         };
         myRectangle.addMouseHandler(mouseHandle);
@@ -83,7 +80,8 @@ public class Main extends JFrame {
 
             @Override
             public boolean mouseEntered(JSpriteMouseEvent m) {
-                return false;
+                System.err.println("Mouse entered canvas");
+                return true;
             }
 
             @Override
@@ -108,10 +106,6 @@ public class Main extends JFrame {
 
             @Override
             public boolean mouseMoved(JSpriteMouseEvent m) {
-            	
-            	if(canvas.eventHandler.findSpriteAt(m.getX(JSpriteCoordinateType.VIRTUAL), m.getY(JSpriteCoordinateType.VIRTUAL)) != null) {
-            	    System.err.println("Over a sprite");
-                }
                 return false;
             }
         });
