@@ -18,98 +18,11 @@ public class Main extends JFrame {
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         JSpriteCanvas canvas = new JSpriteCanvas();
         canvas.debugMode = true;
-        JSprite myRectangle = new JSprite(100, 100, new JSpriteCostume("rect.png"));
-        myRectangle.getVisual(0).setOffsetMode(JSpriteOffsetMode.CENTER);
-        JSpriteMouseHandler mouseHandle = new JSpriteMouseHandler() {
-            @Override
-            public boolean scrollEvent(int amount) {
-                return false;
-            }
-
-            @Override
-            public boolean mouseClicked(JSpriteMouseEvent m) {
-                return false;
-            }
-
-            @Override
-            public boolean mouseEntered(JSpriteMouseEvent m) {
-                System.err.println("Entering the sprite");
-                return true;
-            }
-
-            @Override
-            public boolean mouseExited(JSpriteMouseEvent m) {
-                return false;
-            }
-
-            @Override
-            public boolean mousePressed(JSpriteMouseEvent m) {
-                return false;
-            }
-
-            @Override
-            public boolean mouseReleased(JSpriteMouseEvent m) {
-                return false;
-            }
-
-            @Override
-            public boolean mouseDragged(JSpriteMouseEvent m) {
-	            return false;
-            }
-
-            @Override
-            public boolean mouseMoved(JSpriteMouseEvent m) {
-                myRectangle.xPosition = m.getX(JSpriteCoordinateType.VIRTUAL);
-                myRectangle.yPosition = m.getY(JSpriteCoordinateType.VIRTUAL);
-                canvas.repaint();
-                return true;
-//	            return false;
-            }
-        };
-        myRectangle.addMouseHandler(mouseHandle);
-        canvas.setDefaultMouseHandler(new JSpriteMouseHandler() {
-
-            @Override
-            public boolean scrollEvent(int amount) {
-                return false;
-            }
-
-            @Override
-            public boolean mouseClicked(JSpriteMouseEvent m) {
-                return false;
-            }
-
-            @Override
-            public boolean mouseEntered(JSpriteMouseEvent m) {
-                System.err.println("Mouse entered canvas");
-                return true;
-            }
-
-            @Override
-            public boolean mouseExited(JSpriteMouseEvent m) {
-                return false;
-            }
-
-            @Override
-            public boolean mousePressed(JSpriteMouseEvent m) {
-                return false;
-            }
-
-            @Override
-            public boolean mouseReleased(JSpriteMouseEvent m) {
-                return false;
-            }
-
-            @Override
-            public boolean mouseDragged(JSpriteMouseEvent m) {
-                return false;
-            }
-
-            @Override
-            public boolean mouseMoved(JSpriteMouseEvent m) {
-                return false;
-            }
-        });
+        JSpriteText t = new JSpriteText("Hello, World!");
+        t.setColour(Color.pink);
+        t.setFont(new Font("Papyrus", Font.ITALIC, 32));
+        JSprite myRectangle = new JSprite(0, 0, t);
+        myRectangle.getVisual(0).setOffsetMode(JSpriteOffsetMode.TOP_RIGHT);
         canvas.addSprite(myRectangle, 0);
         this.add(canvas);
         this.pack();
