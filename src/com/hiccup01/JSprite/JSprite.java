@@ -1,4 +1,4 @@
-package com.hiccup01;
+package com.hiccup01.JSprite;
 
 import java.util.ArrayList;
 import java.util.HashMap;

@@ -1,6 +1,4 @@
-package com.hiccup01;
-
-import java.awt.event.MouseEvent;
+package com.hiccup01.JSprite;
 
 public interface JSpriteMouseHandler {
 	JSpriteCoordinateType coordinateType = JSpriteCoordinateType.RELATIVE;

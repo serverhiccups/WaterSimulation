@@ -1,37 +1,53 @@
-package com.hiccup01;
+package com.hiccup01.JSprite;
 
 import java.awt.*;
-import java.util.ArrayList;
+import java.awt.font.FontRenderContext;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Rectangle2D;
 
-public class JSpriteVisualStack implements JSpriteVisual {
+public class JSpriteText implements JSpriteVisual {
 
-	private ArrayList<JSpriteVisual> stack = new ArrayList<>();
+	private String text = "";
 	private int xOffset;
 	private int yOffset;
+	private int width = 0;
+	private int height = 0;
 	private JSpriteOffsetMode offsetMode = JSpriteOffsetMode.CENTER;
+	private Font font = new Font("Helvetica", Font.PLAIN, 12);
+	private AffineTransform at = new AffineTransform();
+	private FontRenderContext frc = new FontRenderContext(at, true, true);
 
-	public JSpriteVisualStack() {
+	public JSpriteText() {
+		this("");
 	}
 
-	public JSpriteVisualStack(ArrayList<JSpriteVisual> stack) {
-		this.stack.addAll(stack);
+	public JSpriteText(String text) {
+		this.text = text;
 		this.updateOffsets();
 	}
 
-	public void pushLayer(JSpriteVisual v) {
-		this.stack.add(v);
+	public Font getFont() {
+		return this.font;
+	}
+
+	public void setFont(Font f) {
+		this.font = f;
 		this.updateOffsets();
 	}
 
-	public JSpriteVisual popLayer() {
-		JSpriteVisual top = this.stack.remove(this.stack.size() - 1);
+	public String getText() {
+		return this.text;
+	}
+
+	public void setText(String t) {
+		this.text = t;
 		this.updateOffsets();
-		return top;
 	}
 
 	private void updateOffsets() {
-		int height = this.getHeight();
-		int width = this.getWidth();
+		Rectangle2D r = this.font.getStringBounds(this.text, this.frc);
+		this.height = (int)r.getHeight();
+		this.width = (int)r.getWidth();
 		switch (this.getOffsetMode()) {
 			case CENTER:
 				this.xOffset = width / 2;
@@ -71,36 +87,23 @@ public class JSpriteVisualStack implements JSpriteVisual {
 
 	@Override
 	public int getWidth() {
-		int maxWidth = 0;
-		for(JSpriteVisual v : this.stack) {
-			if(v.getWidth() > maxWidth) maxWidth = v.getWidth();
-		}
-		return maxWidth;
+		return this.width;
 	}
 
 	@Override
 	public int getHeight() {
-		int maxHeight = 0;
-		for(JSpriteVisual v : this.stack) {
-			if(v.getHeight() > maxHeight) maxHeight = v.getHeight();
-		}
-		return maxHeight;
+		return this.height;
 	}
 
 	@Override
 	public void draw(Graphics g, int x, int y) {
-		for(JSpriteVisual v : this.stack) {
-			v.draw(g, x, y);
-		}
+		Graphics2D g2d = (Graphics2D)g;
 	}
 
 	@Override
 	public boolean isInBounds(int x, int y) {
 		if(x < 0 || y < 0) return false;
 		if(x >= this.getWidth() || y >= this.getHeight()) return false;
-		for(JSpriteVisual v : this.stack) {
-			if(v.isInBounds(x, y)) return true;
-		}
-		return false;
+		return true;
 	}
 }

@@ -1,8 +1,9 @@
 package com.hiccup01;
 
+import com.hiccup01.JSprite.*;
+
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseEvent;
 
 public class Main extends JFrame {
 

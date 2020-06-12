@@ -1,4 +1,4 @@
-package com.hiccup01;
+package com.hiccup01.JSprite;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
