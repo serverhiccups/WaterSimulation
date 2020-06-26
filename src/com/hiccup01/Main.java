@@ -18,12 +18,52 @@ public class Main extends JFrame {
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         JSpriteCanvas canvas = new JSpriteCanvas();
         canvas.debugMode = true;
-        JSpriteText t = new JSpriteText("Hello, World!");
-        t.setColour(Color.pink);
-        t.setFont(new Font("Papyrus", Font.ITALIC, 32));
-        JSprite myRectangle = new JSprite(0, 0, t);
-        myRectangle.getVisual(0).setOffsetMode(JSpriteOffsetMode.TOP_RIGHT);
-        canvas.addSprite(myRectangle, 0);
+        JSpriteLine lv = new JSpriteLine(-1 * Math.PI / (float)4, 200);
+        lv.setThickness((float)10);
+        JSprite line = new JSprite(0, 0, lv);
+        line.addMouseHandler(new JSpriteMouseHandler() {
+            @Override
+            public boolean scrollEvent(int amount) {
+                return false;
+            }
+
+            @Override
+            public boolean mouseClicked(JSpriteMouseEvent m) {
+                System.err.println("clicked on");
+                return true;
+            }
+
+            @Override
+            public boolean mouseEntered(JSpriteMouseEvent m) {
+                return false;
+            }
+
+            @Override
+            public boolean mouseExited(JSpriteMouseEvent m) {
+                return false;
+            }
+
+            @Override
+            public boolean mousePressed(JSpriteMouseEvent m) {
+                return false;
+            }
+
+            @Override
+            public boolean mouseReleased(JSpriteMouseEvent m) {
+                return false;
+            }
+
+            @Override
+            public boolean mouseDragged(JSpriteMouseEvent m) {
+                return false;
+            }
+
+            @Override
+            public boolean mouseMoved(JSpriteMouseEvent m) {
+                return false;
+            }
+        });
+        canvas.addSprite(line, 0);
         this.add(canvas);
         this.pack();
         this.toFront();
