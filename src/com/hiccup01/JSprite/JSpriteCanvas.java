@@ -80,5 +80,7 @@ public class JSpriteCanvas extends Canvas {
 					}
 			}
 		}
+		// Delete ephemeral sprites.
+		this.spriteStack.removeIf(c -> c.sprite.ephemeral);
 	}
 }

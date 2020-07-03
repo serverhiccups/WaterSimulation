@@ -30,6 +30,10 @@ public class JSpriteVisualStack implements JSpriteVisual {
 		return top;
 	}
 
+	public JSpriteVisual top() {
+		return this.stack.get(this.stack.size() - 1);
+	}
+
 	private void updateOffsets() {
 		int height = this.getHeight();
 		int width = this.getWidth();
@@ -91,7 +95,7 @@ public class JSpriteVisualStack implements JSpriteVisual {
 	@Override
 	public void draw(Graphics g, int x, int y) {
 		for(JSpriteVisual v : this.stack) {
-			v.draw(g, x, y);
+			v.draw(g, x - v.getXOffset(), y - v.getYOffset());
 		}
 	}
 

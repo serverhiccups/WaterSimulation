@@ -16,9 +16,10 @@ public class JSpriteLine implements JSpriteVisual {
 	private int yDisplacement;
 	private JSpriteOffsetMode offsetMode = JSpriteOffsetMode.CENTER;
 
-	public JSpriteLine(double rotation, float length) {
+	public JSpriteLine(double rotation, float length, float thickness) {
 		this.rotation = rotation;
 		this.length = length;
+		this.thickness = thickness;
 		this.updateOffsets();
 	}
 

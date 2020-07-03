@@ -13,60 +13,31 @@ public class Main extends JFrame {
     }
 
     public void doGui() throws Exception {
-        this.setTitle("JSprite Test");
-        this.getContentPane().setPreferredSize(new Dimension(600, 400));
+        this.setTitle("Water Simulation");
+        this.getContentPane().setPreferredSize(new Dimension(800, 640));
+        this.setResizable(false);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+        // Main UI Elements
         JSpriteCanvas canvas = new JSpriteCanvas();
         canvas.debugMode = true;
-        JSpriteLine lv = new JSpriteLine(-1 * Math.PI / (float)4, 200);
-        lv.setThickness((float)10);
-        JSprite line = new JSprite(0, 0, lv);
-        line.addMouseHandler(new JSpriteMouseHandler() {
-            @Override
-            public boolean scrollEvent(int amount) {
-                return false;
-            }
+        JSprite addButton = new JSprite(8, 8, new JSpriteCostume("icons/add.png"));
+        addButton.getVisual(addButton.getCurrentVisual()).setOffsetMode(JSpriteOffsetMode.TOP_RIGHT);
+        canvas.addSprite(addButton, 0);
+        JSprite separator = new JSprite(0, 48, new JSpriteLine(0, 800, 1));
+        separator.getVisual(separator.getCurrentVisual()).setOffsetMode(JSpriteOffsetMode.TOP_RIGHT);
+        canvas.addSprite(separator, 1);
+        JSprite background = new JSprite(0, 49, new JSpriteRectangle(800, 640 - 49));
+        canvas.addSprite(background, 2);
 
-            @Override
-            public boolean mouseClicked(JSpriteMouseEvent m) {
-                System.err.println("clicked on");
-                return true;
-            }
+        // Network Manager
+        NetworkManager manager = new NetworkManager(canvas);
+        manager.addNode();
 
-            @Override
-            public boolean mouseEntered(JSpriteMouseEvent m) {
-                return false;
-            }
-
-            @Override
-            public boolean mouseExited(JSpriteMouseEvent m) {
-                return false;
-            }
-
-            @Override
-            public boolean mousePressed(JSpriteMouseEvent m) {
-                return false;
-            }
-
-            @Override
-            public boolean mouseReleased(JSpriteMouseEvent m) {
-                return false;
-            }
-
-            @Override
-            public boolean mouseDragged(JSpriteMouseEvent m) {
-                return false;
-            }
-
-            @Override
-            public boolean mouseMoved(JSpriteMouseEvent m) {
-                return false;
-            }
-        });
-        canvas.addSprite(line, 0);
+        // Setup the window
         this.add(canvas);
         this.pack();
         this.toFront();
         this.setVisible(true);
+        this.repaint();
     }
 }
