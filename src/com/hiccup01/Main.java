@@ -19,7 +19,7 @@ public class Main extends JFrame {
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         // Main UI Elements
         JSpriteCanvas canvas = new JSpriteCanvas();
-        canvas.debugMode = true;
+//        canvas.debugMode = true;
         JSprite addButton = new JSprite(8, 8, new JSpriteCostume("icons/add.png"));
         addButton.getVisual(addButton.getCurrentVisual()).setOffsetMode(JSpriteOffsetMode.TOP_RIGHT);
         canvas.addSprite(addButton, 0);

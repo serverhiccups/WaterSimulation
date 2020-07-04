@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class JSprite {
-	// Ephemeral sprites are delete after one paint operation
+	// Ephemeral sprites are deleted after one paint operation
 	public Boolean ephemeral = false;
 	public Boolean visible = true;
 	public int xPosition;

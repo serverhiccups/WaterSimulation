@@ -50,10 +50,13 @@ public class NetworkManager {
 				n.spriteContainer = new JSpriteContainer(this.nextSpriteId(), new JSprite(n.x, n.y, new JSpriteVisualStack()));
 				sprite = n.spriteContainer.sprite;
 				// Static Assets for the sprites. Can be switched between based of data at paint-time.
-				sprite.getVisual(sprite.getCurrentVisual()).setOffsetMode(JSpriteOffsetMode.TOP_RIGHT);
-				((JSpriteVisualStack) sprite.getVisual(sprite.getCurrentVisual())).pushLayer(new JSpriteCircle(25, Color.blue));
-				((JSpriteVisualStack) sprite.getVisual(sprite.getCurrentVisual())).top().setOffsetMode(JSpriteOffsetMode.TOP_RIGHT);
+				sprite.getVisual(sprite.getCurrentVisual()).setOffsetMode(JSpriteOffsetMode.CENTER);
+				((JSpriteVisualStack) sprite.getVisual(sprite.getCurrentVisual())).pushLayer(new JSpriteCircle(38, new Color(75, 75, 255)));
+				((JSpriteVisualStack) sprite.getVisual(sprite.getCurrentVisual())).top().setOffsetMode(JSpriteOffsetMode.CENTER);
+				((JSpriteVisualStack) sprite.getVisual(sprite.getCurrentVisual())).pushLayer(new JSpriteCircle(35, Color.blue));
+				((JSpriteVisualStack) sprite.getVisual(sprite.getCurrentVisual())).top().setOffsetMode(JSpriteOffsetMode.CENTER);
 				JSpriteText label = new JSpriteText("");
+				label.setFont(new Font("Helvetica", Font.BOLD, 14));
 				label.setOffsetMode(JSpriteOffsetMode.CENTER);
 				switch (n.type) {
 					case JUNCTION:
@@ -67,6 +70,7 @@ public class NetworkManager {
 						break;
 				}
 				((JSpriteVisualStack) sprite.getVisual(sprite.getCurrentVisual())).pushLayer(label);
+				sprite.addMouseHandler(new NodeMouseHandler(n, this));
 				try {
 					c.addSprite(sprite, n.spriteContainer.id);
 				} catch (Exception e) {
@@ -79,6 +83,7 @@ public class NetworkManager {
 				sprite.yPosition = n.y;
 			}
 		}
+		this.canvas.repaint();
 	}
 
 //	public String serialise();

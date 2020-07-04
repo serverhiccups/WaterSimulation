@@ -207,8 +207,20 @@ public class JSpriteMouseEventHandler implements MouseListener, MouseMotionListe
 	@Override
 	public void mouseDragged(MouseEvent e) {
 //		System.err.println("handler got a drag event");
+		JSpriteButtonType b = this.transformButtonType(e.getButton());
+		switch (b) {
+			case PRIMARY:
+				this.deliverEvent(JSpriteMouseEventType.MOUSE_DRAG, e, this.primaryPressed);
+				break;
+			case SECONDARY:
+				this.deliverEvent(JSpriteMouseEventType.MOUSE_DRAG, e, this.secondaryPressed);
+				break;
+			case TERTIARY:
+				this.deliverEvent(JSpriteMouseEventType.MOUSE_DRAG, e, this.tertiaryPressed);
+				break;
+			default:
+		}
 		this.createEnterExitEvents(e);
-		this.deliverEvent(JSpriteMouseEventType.MOUSE_DRAG, e);
 	}
 
 	@Override

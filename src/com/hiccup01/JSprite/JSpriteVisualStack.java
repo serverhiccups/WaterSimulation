@@ -95,7 +95,18 @@ public class JSpriteVisualStack implements JSpriteVisual {
 	@Override
 	public void draw(Graphics g, int x, int y) {
 		for(JSpriteVisual v : this.stack) {
-			v.draw(g, x - v.getXOffset(), y - v.getYOffset());
+//			v.draw(g, x - v.getXOffset(), y - v.getYOffset());
+			switch (v.getOffsetMode()) {
+				case TOP_RIGHT:
+					v.draw(g, x, y);
+					break;
+				case CENTER:
+					v.draw(g, x + (this.getWidth() / 2) - v.getXOffset(), y + (this.getHeight() / 2) - v.getYOffset());
+					break;
+				case BOTTOM_LEFT:
+					v.draw(g, x + this.getWidth() - v.getWidth(), y + this.getHeight() - v.getHeight());
+					break;
+			}
 		}
 	}
 
@@ -104,7 +115,18 @@ public class JSpriteVisualStack implements JSpriteVisual {
 		if(x < 0 || y < 0) return false;
 		if(x >= this.getWidth() || y >= this.getHeight()) return false;
 		for(JSpriteVisual v : this.stack) {
-			if(v.isInBounds(x, y)) return true;
+//			if(v.isInBounds(x, y)) return true;
+			switch (v.getOffsetMode()) {
+				case TOP_RIGHT:
+					if(v.isInBounds(x, y)) return true;
+					break;
+				case CENTER:
+					if(v.isInBounds(x - ((this.getWidth() / 2) - v.getXOffset()), y - ((this.getHeight() / 2) - v.getYOffset()))) return true;
+					break;
+				case BOTTOM_LEFT:
+					if(v.isInBounds(x - (this.getWidth() - v.getWidth()), y - (this.getHeight() - v.getHeight()))) return true;
+					break;
+			}
 		}
 		return false;
 	}

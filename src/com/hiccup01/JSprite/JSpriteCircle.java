@@ -39,17 +39,16 @@ public class JSpriteCircle implements JSpriteVisual {
 	public void draw(Graphics g, int x, int y) {
 		Graphics2D g2d = (Graphics2D)g;
 		g2d.setColor(this.c);
-		g2d.fill(new Ellipse2D.Double(((double)x - (this.getWidth() / 2)), ((double) y - (this.getHeight() / 2)), this.getWidth(), this.getHeight()));
+		g2d.fill(new Ellipse2D.Double(x, y, this.getWidth(), this.getHeight()));
 	}
 
 	@Override
 	public boolean isInBounds(int x, int y) {
 		if(x < 0 || y < 0) return false;
 		if(x > this.getWidth() - 1 || y > this.getHeight() - 1) return false;
-		float xMid = x - radius;
-		float yMid = y - radius;
-		float distance = (float)Math.hypot(x, y);
-		if(distance > radius) return false;
+		float distance = (float)Math.hypot(x - this.radius, y - this.radius);
+//		System.err.println("distance is " + distance);
+		if(distance > this.radius) return false;
 		return true;
 	}
 
