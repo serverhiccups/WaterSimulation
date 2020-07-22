@@ -31,13 +31,16 @@ public class Main extends JFrame {
 
         // Network Manager
         NetworkManager manager = new NetworkManager(canvas);
-        manager.addNode();
+//        manager.addNode();
+
+        addButton.addMouseHandler(new AddNodeButtonMouseHandler(manager));
 
         // Setup the window
         this.add(canvas);
         this.pack();
         this.toFront();
         this.setVisible(true);
+        canvas.createBufferStrategy(4); // Prevent the canvas from flashing
         this.repaint();
     }
 }

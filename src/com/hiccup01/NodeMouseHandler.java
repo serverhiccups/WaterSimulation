@@ -45,10 +45,22 @@ public class NodeMouseHandler implements JSpriteMouseHandler {
 		return false;
 	}
 
+	private int clamp(int val, int min, int max) {
+		return Math.max(min, Math.min(max, val));
+	}
+
 	@Override
 	public boolean mouseDragged(JSpriteMouseEvent m) {
-		this.self.x = m.getX(JSpriteCoordinateType.VIRTUAL);
-		this.self.y = m.getY(JSpriteCoordinateType.VIRTUAL);
+//		this.self.x = m.getX(JSpriteCoordinateType.VIRTUAL);
+//		this.self.y = m.getY(JSpriteCoordinateType.VIRTUAL);
+		this.self.x = this.clamp(m.getX(JSpriteCoordinateType.VIRTUAL), 38, 800 - 38);
+		this.self.y = this.clamp(m.getY(JSpriteCoordinateType.VIRTUAL), 48 + 38, 640 - 38);
+		try {
+			// This might be hella slow
+			this.networkManager.canvas.sendToFront(this.self.spriteContainer.id);
+		} catch (Exception e) {
+			System.err.println("Failed to send the currently dragged junction to the front");
+		}
 		this.networkManager.updateView();
 		return true;
 	}

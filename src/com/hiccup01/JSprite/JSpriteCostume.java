@@ -40,7 +40,7 @@ public class JSpriteCostume implements JSpriteVisual {
 		if(x < 0 || y < 0) return false;
 		if(x > this.getWidth() - 1 || y > this.getHeight() - 1) return false;
 		if(((this.costume.getRGB(x, y) >> 24) & 0xFF) == 0){
-			System.err.println("because rgb " + this.costume.getRGB(x, y));
+//			System.err.println("because rgb " + this.costume.getRGB(x, y));
 			return false;
 		}
 		return true;

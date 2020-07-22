@@ -11,7 +11,7 @@ public class NetworkManager {
 
 	private ArrayList<Node> nodeList = new ArrayList<>();
 	private ArrayList<Pipe> pipeList = new ArrayList<>();
-	private JSpriteCanvas canvas = null;
+	public JSpriteCanvas canvas = null;
 	private int highestSpriteId = MIN_SPRITE_NUMBER;
 
 	final int DEFAULT_X = 500;

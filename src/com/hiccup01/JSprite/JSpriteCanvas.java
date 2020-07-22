@@ -37,6 +37,20 @@ public class JSpriteCanvas extends Canvas {
 		return sprite.sprite;
 	}
 
+	public void sendToBack(int id) throws JSpriteException {
+		JSpriteContainer sprite = this.findSpriteById(id);
+		if(sprite == null) throw new JSpriteException("Can't move non-existent sprite with id " + id);
+		this.spriteStack.remove(sprite);
+		this.spriteStack.add(0, sprite);
+	}
+
+	public void sendToFront(int id) throws JSpriteException {
+		JSpriteContainer sprite = this.findSpriteById(id);
+		if(sprite == null) throw new JSpriteException("Can't move non-existent sprite with id " + id);
+		this.spriteStack.remove(sprite);
+		this.spriteStack.add(this.spriteStack.size(), sprite);
+	}
+
 	public void scrollX(int amount) {
 		this.virtualX += amount;
 	}
@@ -57,9 +71,11 @@ public class JSpriteCanvas extends Canvas {
 
 	@Override
 	public void paint(Graphics g) {
+		if (this.debugMode) System.err.println("------------------------------");
 		for(JSpriteContainer c : this.spriteStack) {
 			JSprite s = c.sprite;
 			if(!s.visible) continue;
+			if (this.debugMode) System.err.println("Currently painting sprite: " + s + ", id: " + c.id);
 			JSpriteVisual visual = s.getVisual(s.getCurrentVisual());
 			switch (s.getCoordinateType()) {
 				case VIRTUAL:
