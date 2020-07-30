@@ -23,6 +23,18 @@ public class JSpriteLine implements JSpriteVisual {
 		this.updateOffsets();
 	}
 
+	/**
+	 * Aligns the line along two points.
+	 * WARNING: DO NOT USE THIS METHOD FOR OFFSET MODES OTHER THAN JSpriteOffsetMode.CENTER.
+	 * @return The x and y to move the sprite to in an int[].
+	 */
+	public int[] alignToPoints(int startX, int startY, int endX, int endY) {
+		this.length = (float) Math.hypot(Math.abs(startX - endX), Math.abs(startY - endY));
+		this.rotation = -1 * Math.atan2(endY - startY, endX - startX);
+		this.updateOffsets();
+		return new int[]{(startX + endX) / 2, (startY + endY) / 2};
+	}
+
 	public double getRotation() {
 		return this.rotation;
 	}
@@ -47,6 +59,14 @@ public class JSpriteLine implements JSpriteVisual {
 
 	public void setThickness(float t) {
 		this.thickness = t;
+	}
+
+	public Color getColour() {
+		return this.c;
+	}
+
+	public void setColour(Color c) {
+		this.c = c;
 	}
 
 	private void updateOffsets() {
@@ -111,10 +131,15 @@ public class JSpriteLine implements JSpriteVisual {
 		} else { // If in the first or third quadrant
 			g2d.drawLine(x, y + this.getHeight(), x + this.getWidth(), y);
 		}
+		if(this.c == Color.RED) {
+			System.out.println("Drew the line");
+			System.out.println("x: " + x + " y: " + y);
+		}
 	}
 
 	@Override
 	public boolean isInBounds(int x, int y) {
+//		if(this.c == Color.PINK) System.out.println("bounds check x: " + x + " y: " + y);
 		if(x < 0 || y < 0) return false;
 		if(x >= this.getWidth() || y >= this.getHeight()) return false;
 		if((this.xDisplacement <= 0 && this.yDisplacement > 0) || (this.xDisplacement > 0 && this.yDisplacement <= 0)) { // If in the second or forth quadrant.
@@ -125,6 +150,7 @@ public class JSpriteLine implements JSpriteVisual {
 			double opAngle = 90 - angle;
 			double xDist = Math.abs(x - ((float)y / ((float)this.getHeight() / (float)this.getWidth())));
 			double A = (xDist * Math.sin(opAngle) / Math.sin(180 - 45 - opAngle));
+			if(this.c == Color.PINK) System.err.println("A is " + A);
 			if(A > this.thickness / 2) return false;
 			return true;
 		} else { // If in the first or third quadrant
@@ -135,6 +161,7 @@ public class JSpriteLine implements JSpriteVisual {
 			double opAngle = 90 - angle;
 			double xDist = Math.abs(x - ((float)(y - this.getHeight()) / ( -1 * (float)this.getHeight() / (float)this.getWidth())));
 			double A = (xDist * Math.sin(opAngle) / Math.sin(180 - 45 - opAngle));
+			if(this.c == Color.PINK) System.err.println("A is " + A);
 			if(A > this.thickness / 2) return false;
 			return true;
 		}

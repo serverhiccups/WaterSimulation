@@ -1,6 +1,7 @@
 package com.hiccup01;
 
 import com.hiccup01.JSprite.JSpriteMouseEvent;
+import com.hiccup01.JSprite.JSpriteMouseEventDelegate;
 import com.hiccup01.JSprite.JSpriteMouseHandler;
 
 public class AddNodeButtonMouseHandler implements JSpriteMouseHandler {
@@ -10,45 +11,38 @@ public class AddNodeButtonMouseHandler implements JSpriteMouseHandler {
 		this.networkManager = networkManager;
 	}
 
-	@Override
-	public boolean scrollEvent(int amount) {
-		return false;
+	public JSpriteMouseEventDelegate scrollEvent(int amount) {
+		return null;
 	}
 
 	@Override
-	public boolean mouseClicked(JSpriteMouseEvent m) {
+	public JSpriteMouseEventDelegate mouseClicked(JSpriteMouseEvent m) {
 		this.networkManager.addNode();
 		this.networkManager.updateView();
-		return true;
+		return new JSpriteMouseEventDelegate(true);
 	}
 
-	@Override
-	public boolean mouseEntered(JSpriteMouseEvent m) {
-		return false;
+	public JSpriteMouseEventDelegate mouseEntered(JSpriteMouseEvent m) {
+		return null;
 	}
 
-	@Override
-	public boolean mouseExited(JSpriteMouseEvent m) {
-		return false;
+	public JSpriteMouseEventDelegate mouseExited(JSpriteMouseEvent m) {
+		return null;
 	}
 
-	@Override
-	public boolean mousePressed(JSpriteMouseEvent m) {
-		return false;
+	public JSpriteMouseEventDelegate mousePressed(JSpriteMouseEvent m) {
+		return null;
 	}
 
-	@Override
-	public boolean mouseReleased(JSpriteMouseEvent m) {
-		return false;
+	public JSpriteMouseEventDelegate mouseReleased(JSpriteMouseEvent m) {
+		return null;
 	}
 
-	@Override
-	public boolean mouseDragged(JSpriteMouseEvent m) {
-		return false;
+	public JSpriteMouseEventDelegate mouseDragged(JSpriteMouseEvent m) {
+		return null;
 	}
 
-	@Override
-	public boolean mouseMoved(JSpriteMouseEvent m) {
-		return false;
+	public JSpriteMouseEventDelegate mouseMoved(JSpriteMouseEvent m) {
+		return null;
 	}
 }

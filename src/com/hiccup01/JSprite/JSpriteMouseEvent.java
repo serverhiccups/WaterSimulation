@@ -3,7 +3,7 @@ package com.hiccup01.JSprite;
 import org.jetbrains.annotations.NotNull;
 
 public class JSpriteMouseEvent {
-	JSpriteButtonType buttonType;
+	public JSpriteButtonType buttonType;
 	private JSpriteCoordinateType defaultCoordinateType;
 	// Add methods for getting the position, etc. and the event type.
 	int numberOfClicks;

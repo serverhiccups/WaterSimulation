@@ -56,46 +56,42 @@ public class JSpriteMouseEventHandler implements MouseListener, MouseMotionListe
 		switch (button) {
 			case MouseEvent.BUTTON1:
 				return JSpriteButtonType.PRIMARY;
-			case MouseEvent.BUTTON2:
+			case MouseEvent.BUTTON3: // Button 3 is actually right click
+//				System.err.println("Converting to a secondary event");
 				return JSpriteButtonType.SECONDARY;
-			case MouseEvent.BUTTON3:
+			case MouseEvent.BUTTON2: // Button 2 is middle click
 				return JSpriteButtonType.TERTIARY;
 			default:
 				return JSpriteButtonType.NONE;
 		}
 	}
 
-	private void cascadeEvent(JSprite s, JSpriteMouseEventType t, JSpriteMouseEvent e) {
+	private JSprite cascadeEvent(JSprite s, JSpriteMouseEventType t, JSpriteMouseEvent e) {
 		ListIterator<JSpriteMouseHandler> li = s.mouseHandlers.listIterator(s.mouseHandlers.size());
 		while(li.hasPrevious()) {
 			JSpriteMouseHandler next = li.previous();
-			boolean status = false;
-			switch (t) {
-				case MOUSE_CLICK:
-					status = next.mouseClicked(e);
-					break;
-				case MOUSE_ENTER:
-					status = next.mouseEntered(e);
-					break;
-				case MOUSE_EXIT:
-					status = next.mouseExited(e);
-					break;
-				case MOUSE_PRESS:
-					status = next.mousePressed(e);
-					break;
-				case MOUSE_RELEASE:
-					status = next.mouseReleased(e);
-					break;
-				case MOUSE_MOVE:
-//					System.err.println("Delivering move event to sprite");
-					status = next.mouseMoved(e);
-					break;
-				case MOUSE_DRAG:
-					status = next.mouseDragged(e);
-					break;
+			//					System.err.println("Delivering move event to sprite");
+			JSpriteMouseEventDelegate status = switch (t) {
+				case MOUSE_CLICK -> next.mouseClicked(e);
+				case MOUSE_ENTER -> next.mouseEntered(e);
+				case MOUSE_EXIT -> next.mouseExited(e);
+				case MOUSE_PRESS -> next.mousePressed(e);
+				case MOUSE_RELEASE -> next.mouseReleased(e);
+				case MOUSE_MOVE -> next.mouseMoved(e);
+				case MOUSE_DRAG -> next.mouseDragged(e);
+			};
+			if(status == null) status = new JSpriteMouseEventDelegate(false);
+			if(status.isComplete()) {
+//				if(e.buttonType == JSpriteButtonType.SECONDARY) System.err.println("Got a COMPLETE delegate status on a secondary press");
+				return s;
 			}
-			if(status) break;
+			if(status.getDelegate() != null) {
+				System.err.println("A delegation happened!");
+				this.cascadeEvent(status.getDelegate(), t, e);
+				return status.getDelegate();
+			}
 		}
+		return s;
 	}
 
 	private JSprite deliverEvent(JSpriteMouseEventType t, MouseEvent m) {
@@ -138,8 +134,7 @@ public class JSpriteMouseEventHandler implements MouseListener, MouseMotionListe
 			return at;
 		}
 		JSpriteMouseEvent e = this.transformMouseEvent(m, t, at.xPosition - at.getVisual(at.getCurrentVisual()).getXOffset(), at.yPosition - at.getVisual(at.getCurrentVisual()).getYOffset());
-		this.cascadeEvent(at, t, e);
-		return at;
+		return this.cascadeEvent(at, t, e);
 	}
 
 	@Override
@@ -149,21 +144,22 @@ public class JSpriteMouseEventHandler implements MouseListener, MouseMotionListe
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		JSprite at = this.findSpriteAt(e.getX() + this.canvas.virtualX, e.getY() + this.canvas.virtualY);
+		System.err.println("getButton is " + e.getButton());
 		JSpriteButtonType b = this.transformButtonType(e.getButton());
 		switch (b) {
 			case PRIMARY:
-				this.primaryPressed = at;
+				this.primaryPressed = this.deliverEvent(JSpriteMouseEventType.MOUSE_PRESS, e);
 				break;
 			case SECONDARY:
-				this.secondaryPressed = at;
+				System.err.println("Creating a secondary event");
+				this.secondaryPressed = this.deliverEvent(JSpriteMouseEventType.MOUSE_PRESS, e);
+				System.out.println("Target delegate for secondary press was " + this.secondaryPressed);
 				break;
 			case TERTIARY:
-				this.tertiaryPressed = at;
+				this.tertiaryPressed = this.deliverEvent(JSpriteMouseEventType.MOUSE_PRESS, e);
 				break;
 			default:
 		}
-		this.deliverEvent(JSpriteMouseEventType.MOUSE_PRESS, e);
 	}
 
 	@Override
@@ -213,6 +209,7 @@ public class JSpriteMouseEventHandler implements MouseListener, MouseMotionListe
 				this.deliverEvent(JSpriteMouseEventType.MOUSE_DRAG, e, this.primaryPressed);
 				break;
 			case SECONDARY:
+//				System.out.println("Delivering a drag to " + this.secondaryPressed);
 				this.deliverEvent(JSpriteMouseEventType.MOUSE_DRAG, e, this.secondaryPressed);
 				break;
 			case TERTIARY:

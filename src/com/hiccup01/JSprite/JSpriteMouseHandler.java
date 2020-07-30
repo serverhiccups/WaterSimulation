@@ -2,12 +2,12 @@ package com.hiccup01.JSprite;
 
 public interface JSpriteMouseHandler {
 	JSpriteCoordinateType coordinateType = JSpriteCoordinateType.RELATIVE;
-	boolean scrollEvent(int amount);
-	boolean mouseClicked(JSpriteMouseEvent m);
-	boolean mouseEntered(JSpriteMouseEvent m);
-	boolean mouseExited(JSpriteMouseEvent m);
-	boolean mousePressed(JSpriteMouseEvent m);
-	boolean mouseReleased(JSpriteMouseEvent m);
-	boolean mouseDragged(JSpriteMouseEvent m);
-	boolean mouseMoved(JSpriteMouseEvent m);
+	JSpriteMouseEventDelegate scrollEvent(int amount);
+	JSpriteMouseEventDelegate mouseClicked(JSpriteMouseEvent m);
+	JSpriteMouseEventDelegate mouseEntered(JSpriteMouseEvent m);
+	JSpriteMouseEventDelegate mouseExited(JSpriteMouseEvent m);
+	JSpriteMouseEventDelegate mousePressed(JSpriteMouseEvent m);
+	JSpriteMouseEventDelegate mouseReleased(JSpriteMouseEvent m);
+	JSpriteMouseEventDelegate mouseDragged(JSpriteMouseEvent m);
+	JSpriteMouseEventDelegate mouseMoved(JSpriteMouseEvent m);
 }

@@ -11,6 +11,7 @@ public class NetworkManager {
 
 	private ArrayList<Node> nodeList = new ArrayList<>();
 	private ArrayList<Pipe> pipeList = new ArrayList<>();
+	public PipePreview pipePreview = null;
 	public JSpriteCanvas canvas = null;
 	private int highestSpriteId = MIN_SPRITE_NUMBER;
 
@@ -41,6 +42,17 @@ public class NetworkManager {
 
 	private int nextSpriteId() {
 		return ++this.highestSpriteId;
+	}
+
+	public JSprite getPipePreview(int startX, int startY){
+		if(pipePreview != null) return pipePreview.spriteContainer.sprite;
+		System.err.println("startX: " + startX + " startY: " + startY);
+		this.pipePreview = new PipePreview(startX, startY, startX, startY);
+		this.pipePreview.spriteContainer = new JSpriteContainer(this.nextSpriteId(), new JSprite(0, 0, new JSpriteLine(0, 100, 5)));
+		((JSpriteLine) this.pipePreview.spriteContainer.sprite.getVisual(0)).setColour(Color.PINK);
+		this.pipePreview.spriteContainer.sprite.addMouseHandler(new PipePreviewMouseHandler(this.pipePreview, this));
+		System.out.println("PipePreview sprite is " + this.pipePreview.spriteContainer.sprite);
+		return pipePreview.spriteContainer.sprite;
 	}
 
 	private void updateView(JSpriteCanvas c) {
@@ -82,6 +94,28 @@ public class NetworkManager {
 				sprite.xPosition = n.x;
 				sprite.yPosition = n.y;
 			}
+		}
+		// Pipe Preview
+		if(this.pipePreview != null) {
+			if(!this.pipePreview.onCanvas) {
+				try {
+					c.addSprite(this.pipePreview.spriteContainer.sprite, this.pipePreview.spriteContainer.id);
+					this.pipePreview.onCanvas = true;
+					System.err.println("Added the preview to the canvas");
+//					this.nodeList.get(0).spriteContainer.sprite.visible = false;
+				} catch (Exception e) {
+					System.err.println("Failed to create a pipe preview");
+				}
+			}
+			int[] point = ((JSpriteLine) this.pipePreview.spriteContainer.sprite.getVisual(this.pipePreview.spriteContainer.sprite.getCurrentVisual())).alignToPoints(this.pipePreview.startX, this.pipePreview.startY, this.pipePreview.endX, this.pipePreview.endY);
+			this.pipePreview.spriteContainer.sprite.xPosition = point[0];
+			this.pipePreview.spriteContainer.sprite.yPosition = point[1];
+			try {
+				c.sendToBack(this.pipePreview.spriteContainer.id);
+			} catch (Exception e) {
+				System.err.println("Failed to send the PipePreview to the back");
+			}
+			System.err.println("Updated pipe preview position");
 		}
 		this.canvas.repaint();
 	}
