@@ -150,7 +150,7 @@ public class JSpriteLine implements JSpriteVisual {
 			double opAngle = 90 - angle;
 			double xDist = Math.abs(x - ((float)y / ((float)this.getHeight() / (float)this.getWidth())));
 			double A = (xDist * Math.sin(opAngle) / Math.sin(180 - 45 - opAngle));
-			if(this.c == Color.PINK) System.err.println("A is " + A);
+//			if(this.c == Color.PINK) System.err.println("A is " + A);
 			if(A > this.thickness / 2) return false;
 			return true;
 		} else { // If in the first or third quadrant
@@ -161,7 +161,7 @@ public class JSpriteLine implements JSpriteVisual {
 			double opAngle = 90 - angle;
 			double xDist = Math.abs(x - ((float)(y - this.getHeight()) / ( -1 * (float)this.getHeight() / (float)this.getWidth())));
 			double A = (xDist * Math.sin(opAngle) / Math.sin(180 - 45 - opAngle));
-			if(this.c == Color.PINK) System.err.println("A is " + A);
+//			if(this.c == Color.PINK) System.err.println("A is " + A);
 			if(A > this.thickness / 2) return false;
 			return true;
 		}

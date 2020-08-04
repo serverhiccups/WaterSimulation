@@ -43,7 +43,10 @@ public class PipePreviewMouseHandler implements JSpriteMouseHandler {
 
 	@Override
 	public JSpriteMouseEventDelegate mouseReleased(JSpriteMouseEvent m) {
-		return null;
+		System.err.println("Attempting to land the preview");
+		this.networkManager.landPreview(m.getX(JSpriteCoordinateType.VIRTUAL), m.getY(JSpriteCoordinateType.VIRTUAL));
+		this.networkManager.updateView();
+		return JSpriteMouseEventDelegate.COMPLETED;
 	}
 
 	@Override

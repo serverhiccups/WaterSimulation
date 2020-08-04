@@ -3,6 +3,7 @@ package com.hiccup01.JSprite;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.util.ArrayList;
 import java.util.ListIterator;
 
 public class JSpriteMouseEventHandler implements MouseListener, MouseMotionListener {
@@ -29,6 +30,21 @@ public class JSpriteMouseEventHandler implements MouseListener, MouseMotionListe
 			}
 		}
 		return null;
+	}
+
+	public ArrayList<JSpriteContainer> findSpriteContainersAt(int x, int y) {
+		ArrayList<JSpriteContainer> list = new ArrayList<>();
+
+		ListIterator<JSpriteContainer> li = this.canvas.spriteStack.listIterator(this.canvas.spriteStack.size());
+		while(li.hasPrevious()) {
+			JSpriteContainer c = li.previous();
+			JSprite s = c.sprite;
+			JSpriteVisual visual = s.getVisual(s.getCurrentVisual());
+			if(visual.isInBounds(x - s.xPosition + visual.getXOffset(), y - s.yPosition + visual.getYOffset()) && s.visible) {
+				list.add(c);
+			}
+		}
+		return list;
 	}
 
 	private void createEnterExitEvents(MouseEvent e) {

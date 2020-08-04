@@ -1,6 +1,6 @@
 package com.hiccup01;
 
-import com.hiccup01.JSprite.JSprite;
+import com.hiccup01.JSprite.JSpriteContainer;
 
 public class Pipe {
 	public Node source;
@@ -8,7 +8,7 @@ public class Pipe {
 	public int maxCapacity;
 	// Ideally this is calculated by our flow calculation code.
 	public int flow;
-	public JSprite sprite = null;
+	public JSpriteContainer spriteContainer = null;
 
 	Pipe(Node source, Node destination, int maxCapacity, int flow) {
 		this.source = source;

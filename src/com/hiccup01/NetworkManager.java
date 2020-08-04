@@ -32,8 +32,20 @@ public class NetworkManager {
 	}
 
 	public void addPipe(Node source, Node destination, int maxCapacity) {
+		if(this.pipeExists(source, destination)) {
+			this.updateView();
+			return;
+		}
+		System.out.println("Connected Node " + source + " to node " + destination);
 		this.pipeList.add(new Pipe(source, destination, maxCapacity, 0));
 		this.updateView();
+	}
+
+	public boolean pipeExists(Node source, Node destination) {
+		for(Pipe p : this.pipeList) {
+			if((p.source == source && p.destination == destination) || (p.source == destination && p.destination == source)) return true;
+		}
+		return false;
 	}
 
 	public void updateView() {
@@ -44,18 +56,45 @@ public class NetworkManager {
 		return ++this.highestSpriteId;
 	}
 
-	public JSprite getPipePreview(int startX, int startY){
+	public JSprite getPipePreview(int startX, int startY, Node startNode){
 		if(pipePreview != null) return pipePreview.spriteContainer.sprite;
-		System.err.println("startX: " + startX + " startY: " + startY);
-		this.pipePreview = new PipePreview(startX, startY, startX, startY);
+//		System.err.println("startX: " + startX + " startY: " + startY);
+		this.pipePreview = new PipePreview(startX, startY, startX, startY, startNode);
 		this.pipePreview.spriteContainer = new JSpriteContainer(this.nextSpriteId(), new JSprite(0, 0, new JSpriteLine(0, 100, 5)));
 		((JSpriteLine) this.pipePreview.spriteContainer.sprite.getVisual(0)).setColour(Color.PINK);
 		this.pipePreview.spriteContainer.sprite.addMouseHandler(new PipePreviewMouseHandler(this.pipePreview, this));
-		System.out.println("PipePreview sprite is " + this.pipePreview.spriteContainer.sprite);
+//		System.out.println("PipePreview sprite is " + this.pipePreview.spriteContainer.sprite);
 		return pipePreview.spriteContainer.sprite;
 	}
 
+	public void landPreview(int x, int y) {
+		ArrayList<JSpriteContainer> containers = this.canvas.eventHandler.findSpriteContainersAt(x, y);
+		Node target = null;
+		for(JSpriteContainer c : containers) {
+			target = this.nodeAssociatedWith(c.id);
+			if(target != null) {
+				this.addPipe(this.pipePreview.startNode, target, 100);
+			} else continue;
+		}
+		try {
+			this.canvas.removeSprite(this.pipePreview.spriteContainer.id);
+		} catch (Exception e) {
+			System.err.println("Failed to remove the PipePreview from the canvas");
+		}
+		this.pipePreview = null;
+	}
+
+	public Node nodeAssociatedWith(int id) {
+		if(id <= 999) return null;
+		for(Node n : this.nodeList) {
+			if(n.spriteContainer == null) continue;
+			if(n.spriteContainer.id == id) return n;
+		}
+		return null;
+	}
+
 	private void updateView(JSpriteCanvas c) {
+		// Nodes
 		for(Node n : this.nodeList) {
 			JSprite sprite = null;
 			if(n.spriteContainer == null) { // A sprite needs to be created.
@@ -89,10 +128,49 @@ public class NetworkManager {
 					System.err.println("Failed to add a node to the canvas");
 				}
 			} else {
-				// Set the state of the sprite based on the data
 				sprite = n.spriteContainer.sprite;
-				sprite.xPosition = n.x;
-				sprite.yPosition = n.y;
+			}
+			// Set the state of the sprite based on the data
+			sprite.xPosition = n.x;
+			sprite.yPosition = n.y;
+		}
+		for(Pipe p : this.pipeList) {
+			JSprite sprite = null;
+			if(p.spriteContainer == null) { // A new sprite needs to be created.
+				p.spriteContainer = new JSpriteContainer(this.nextSpriteId(), new JSprite(0, 0, new JSpriteVisualStack()));
+				sprite = p.spriteContainer.sprite;
+				sprite.getVisual(sprite.getCurrentVisual()).setOffsetMode(JSpriteOffsetMode.CENTER);
+				((JSpriteVisualStack) sprite.getVisual(sprite.getCurrentVisual())).pushLayer(new JSpriteLine(0, 0, 7));
+				((JSpriteVisualStack) sprite.getVisual(sprite.getCurrentVisual())).top().setOffsetMode(JSpriteOffsetMode.CENTER);
+				((JSpriteVisualStack) sprite.getVisual(sprite.getCurrentVisual())).pushLayer(new JSpriteRectangle(54, 24, Color.black));
+				((JSpriteVisualStack) sprite.getVisual(sprite.getCurrentVisual())).top().setOffsetMode(JSpriteOffsetMode.CENTER);
+				((JSpriteVisualStack) sprite.getVisual(sprite.getCurrentVisual())).pushLayer(new JSpriteRectangle(50, 20, Color.white));
+				((JSpriteVisualStack) sprite.getVisual(sprite.getCurrentVisual())).top().setOffsetMode(JSpriteOffsetMode.CENTER);
+				JSpriteText capacity = new JSpriteText("");
+				capacity.setFont(new Font("Helvetica", Font.PLAIN, 11));
+				capacity.setOffsetMode(JSpriteOffsetMode.CENTER);
+				((JSpriteVisualStack) sprite.getVisual(sprite.getCurrentVisual())).pushLayer(capacity);
+				try {
+					c.addSprite(sprite, p.spriteContainer.id);
+				} catch (Exception e) {
+					System.err.println("Failed to add a pipe to the canvas");
+				}
+			} else {
+				sprite = p.spriteContainer.sprite;
+			}
+			JSpriteLine line = (JSpriteLine)((JSpriteVisualStack) sprite.getVisual(0)).getLayer(0);
+			int[] points = line.alignToPoints(p.source.x, p.source.y, p.destination.x, p.destination.y);
+//			System.out.println("Stack size is x: " + sprite.getVisual(sprite.getCurrentVisual()).getWidth() + " y: " + sprite.getVisual(sprite.getCurrentVisual()).getHeight());
+//			System.out.println("Line size is x: " + line.getWidth() + " y: " + line.getHeight());
+//			System.out.println("Points are x: " + points[0] + " y: " + points[1]);
+//			System.out.println("Source is x: " + p.source.x + " y: " + p.source.y);
+			sprite.xPosition = points[0];
+			sprite.yPosition = points[1];
+			((JSpriteText)((JSpriteVisualStack) sprite.getVisual(0)).top()).setText(Integer.toString(p.maxCapacity));
+			try {
+				c.sendToBack(p.spriteContainer.id);
+			} catch (Exception e) {
+
 			}
 		}
 		// Pipe Preview

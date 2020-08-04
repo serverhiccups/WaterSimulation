@@ -40,7 +40,7 @@ public class NodeMouseHandler implements JSpriteMouseHandler {
 		System.err.println("Node got a mouse press");
 		if(m.buttonType == JSpriteButtonType.SECONDARY) {
 			System.err.println("Creating a PipePreview");
-			return new JSpriteMouseEventDelegate(this.networkManager.getPipePreview(m.getX(JSpriteCoordinateType.VIRTUAL), m.getY(JSpriteCoordinateType.VIRTUAL)));
+			return new JSpriteMouseEventDelegate(this.networkManager.getPipePreview(m.getX(JSpriteCoordinateType.VIRTUAL), m.getY(JSpriteCoordinateType.VIRTUAL), this.self));
 		}
 		return null;
 	}

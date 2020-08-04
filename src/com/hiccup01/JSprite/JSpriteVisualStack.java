@@ -34,6 +34,10 @@ public class JSpriteVisualStack implements JSpriteVisual {
 		return this.stack.get(this.stack.size() - 1);
 	}
 
+	public JSpriteVisual getLayer(int id) {
+		return this.stack.get(id);
+	}
+
 	private void updateOffsets() {
 		int height = this.getHeight();
 		int width = this.getWidth();
@@ -66,11 +70,13 @@ public class JSpriteVisualStack implements JSpriteVisual {
 
 	@Override
 	public int getXOffset() {
+		this.updateOffsets();
 		return this.xOffset;
 	}
 
 	@Override
 	public int getYOffset() {
+		this.updateOffsets();
 		return this.yOffset;
 	}
 
