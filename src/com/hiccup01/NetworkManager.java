@@ -2,7 +2,10 @@ package com.hiccup01;
 
 import com.hiccup01.JSprite.*;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.util.ArrayList;
 
 public class NetworkManager {
@@ -14,12 +17,14 @@ public class NetworkManager {
 	public PipePreview pipePreview = null;
 	public JSpriteCanvas canvas = null;
 	private int highestSpriteId = MIN_SPRITE_NUMBER;
+	private BufferedImage arrowImage = null;
 
 	final int DEFAULT_X = 500;
 	final int DEFAULT_Y = 500;
 
-	public NetworkManager(JSpriteCanvas c) {
+	public NetworkManager(JSpriteCanvas c) throws Exception {
 		this.canvas = c;
+		this.arrowImage = ImageIO.read(new File("icons/arrow.png"));
 	}
 
 	// Deserialise from a string.
@@ -61,7 +66,7 @@ public class NetworkManager {
 //		System.err.println("startX: " + startX + " startY: " + startY);
 		this.pipePreview = new PipePreview(startX, startY, startX, startY, startNode);
 		this.pipePreview.spriteContainer = new JSpriteContainer(this.nextSpriteId(), new JSprite(0, 0, new JSpriteLine(0, 100, 5)));
-		((JSpriteLine) this.pipePreview.spriteContainer.sprite.getVisual(0)).setColour(Color.PINK);
+		((JSpriteLine) this.pipePreview.spriteContainer.sprite.getVisual(0)).setColour(Color.BLACK);
 		this.pipePreview.spriteContainer.sprite.addMouseHandler(new PipePreviewMouseHandler(this.pipePreview, this));
 //		System.out.println("PipePreview sprite is " + this.pipePreview.spriteContainer.sprite);
 		return pipePreview.spriteContainer.sprite;
@@ -107,6 +112,7 @@ public class NetworkManager {
 				((JSpriteVisualStack) sprite.getVisual(sprite.getCurrentVisual())).pushLayer(new JSpriteCircle(35, Color.blue));
 				((JSpriteVisualStack) sprite.getVisual(sprite.getCurrentVisual())).top().setOffsetMode(JSpriteOffsetMode.CENTER);
 				JSpriteText label = new JSpriteText("");
+				label.setColour(Color.white);
 				label.setFont(new Font("Helvetica", Font.BOLD, 14));
 				label.setOffsetMode(JSpriteOffsetMode.CENTER);
 				switch (n.type) {
@@ -142,6 +148,8 @@ public class NetworkManager {
 				sprite.getVisual(sprite.getCurrentVisual()).setOffsetMode(JSpriteOffsetMode.CENTER);
 				((JSpriteVisualStack) sprite.getVisual(sprite.getCurrentVisual())).pushLayer(new JSpriteLine(0, 0, 7));
 				((JSpriteVisualStack) sprite.getVisual(sprite.getCurrentVisual())).top().setOffsetMode(JSpriteOffsetMode.CENTER);
+				((JSpriteVisualStack) sprite.getVisual(sprite.getCurrentVisual())).pushLayer(new JSpriteCostume(this.arrowImage));
+				((JSpriteVisualStack) sprite.getVisual(sprite.getCurrentVisual())).top().setOffsetMode(JSpriteOffsetMode.CENTER);
 				((JSpriteVisualStack) sprite.getVisual(sprite.getCurrentVisual())).pushLayer(new JSpriteRectangle(54, 24, Color.black));
 				((JSpriteVisualStack) sprite.getVisual(sprite.getCurrentVisual())).top().setOffsetMode(JSpriteOffsetMode.CENTER);
 				((JSpriteVisualStack) sprite.getVisual(sprite.getCurrentVisual())).pushLayer(new JSpriteRectangle(50, 20, Color.white));
@@ -150,6 +158,7 @@ public class NetworkManager {
 				capacity.setFont(new Font("Helvetica", Font.PLAIN, 11));
 				capacity.setOffsetMode(JSpriteOffsetMode.CENTER);
 				((JSpriteVisualStack) sprite.getVisual(sprite.getCurrentVisual())).pushLayer(capacity);
+				sprite.addMouseHandler(new PipeMouseHandler(p, this));
 				try {
 					c.addSprite(sprite, p.spriteContainer.id);
 				} catch (Exception e) {
@@ -166,6 +175,7 @@ public class NetworkManager {
 //			System.out.println("Source is x: " + p.source.x + " y: " + p.source.y);
 			sprite.xPosition = points[0];
 			sprite.yPosition = points[1];
+			((JSpriteCostume)((JSpriteVisualStack) sprite.getVisual(0)).getLayer(1)).setRotation(-1 * line.getRotation() - (1 * Math.PI / 4));
 			((JSpriteText)((JSpriteVisualStack) sprite.getVisual(0)).top()).setText(Integer.toString(p.maxCapacity));
 			try {
 				c.sendToBack(p.spriteContainer.id);

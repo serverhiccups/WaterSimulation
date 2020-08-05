@@ -2,6 +2,7 @@ package com.hiccup01.JSprite;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -11,6 +12,7 @@ public class JSpriteCostume implements JSpriteVisual {
 	private int xOffset; // These offsets allow us to have per-costume offsets that allow us to have sprite x and y be the center.
 	private int yOffset;
 	private JSpriteOffsetMode offsetMode = JSpriteOffsetMode.CENTER;
+	private double rotation = 0;
 	public JSpriteCostume(String filename) throws IOException {
 		this.costume = ImageIO.read(new File(filename));
 		this.updateOffsets();
@@ -30,13 +32,32 @@ public class JSpriteCostume implements JSpriteVisual {
 		this.updateOffsets();
 	}
 
+	public double getRotation() {
+		return this.rotation;
+	}
+
+	public void setRotation(double rotation) {
+		this.rotation = rotation;
+		this.updateOffsets();
+	}
+
 	@Override
 	public void draw(Graphics g, int x, int y) {
-		g.drawImage(this.costume, x, y, null);
+		Graphics2D g2d = (Graphics2D)g;
+//		g.drawImage(this.costume, x, y, null);
+		AffineTransform t = new AffineTransform();
+		t.translate(x, y);
+		t.rotate(this.getRotation(), (this.getWidth() / 2), (this.getHeight() / 2));
+//		AffineTransform transform = AffineTransform.getRotateInstance(this.getRotation(), (this.getWidth() / 2), (this.getHeight() / 2));
+//		transform.translate(x, y);
+		g2d.drawImage(this.costume, t, null);
+//		g2d.drawImage(this.costume, AffineTransform.getRotateInstance(this.getRotation(), 0, 0), null);
 	}
 
 	@Override
 	public boolean isInBounds(int x, int y) {
+		// It's too complex and not necessary for me to figure out how to make the code work for rotated images.
+		if(this.getRotation() != 0) return false; // Abandon ship
 		if(x < 0 || y < 0) return false;
 		if(x > this.getWidth() - 1 || y > this.getHeight() - 1) return false;
 		if(((this.costume.getRGB(x, y) >> 24) & 0xFF) == 0){
