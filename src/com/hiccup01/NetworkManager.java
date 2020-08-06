@@ -3,6 +3,7 @@ package com.hiccup01;
 import com.hiccup01.JSprite.*;
 
 import javax.imageio.ImageIO;
+import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -18,12 +19,14 @@ public class NetworkManager {
 	public JSpriteCanvas canvas = null;
 	private int highestSpriteId = MIN_SPRITE_NUMBER;
 	private BufferedImage arrowImage = null;
+	public JFrame frame = null;
 
 	final int DEFAULT_X = 500;
 	final int DEFAULT_Y = 500;
 
-	public NetworkManager(JSpriteCanvas c) throws Exception {
+	public NetworkManager(JSpriteCanvas c, JFrame frame) throws Exception {
 		this.canvas = c;
+		this.frame = frame;
 		this.arrowImage = ImageIO.read(new File("icons/arrow.png"));
 	}
 
@@ -44,6 +47,17 @@ public class NetworkManager {
 		System.out.println("Connected Node " + source + " to node " + destination);
 		this.pipeList.add(new Pipe(source, destination, maxCapacity, 0));
 		this.updateView();
+	}
+
+	public Pipe removePipe(Pipe p) {
+		this.pipeList.remove(p);
+		try {
+			this.canvas.removeSprite(p.spriteContainer.id);
+		} catch (Exception e) {
+			System.err.println("Failed to remove a pipe.");
+		}
+		this.updateView();
+		return p;
 	}
 
 	public boolean pipeExists(Node source, Node destination) {

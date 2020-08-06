@@ -32,7 +32,7 @@ public class Main extends JFrame {
 //        canvas.addSprite(background, 2);
 
         // Network Manager
-        NetworkManager manager = new NetworkManager(canvas);
+        NetworkManager manager = new NetworkManager(canvas, this);
 //        manager.addNode();
 
         addButton.addMouseHandler(new AddNodeButtonMouseHandler(manager));
