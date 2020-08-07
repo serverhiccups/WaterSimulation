@@ -13,6 +13,8 @@ public class JSpriteCostume implements JSpriteVisual {
 	private int yOffset;
 	private JSpriteOffsetMode offsetMode = JSpriteOffsetMode.CENTER;
 	private double rotation = 0;
+	// If fullHitbox is on, we count anything within the bounding box the the image to be inBounds.
+	public boolean fullHitbox = false;
 	public JSpriteCostume(String filename) throws IOException {
 		this.costume = ImageIO.read(new File(filename));
 		this.updateOffsets();
@@ -60,6 +62,7 @@ public class JSpriteCostume implements JSpriteVisual {
 		if(this.getRotation() != 0) return false; // Abandon ship
 		if(x < 0 || y < 0) return false;
 		if(x > this.getWidth() - 1 || y > this.getHeight() - 1) return false;
+		if(this.fullHitbox) return true;
 		if(((this.costume.getRGB(x, y) >> 24) & 0xFF) == 0){
 //			System.err.println("because rgb " + this.costume.getRGB(x, y));
 			return false;

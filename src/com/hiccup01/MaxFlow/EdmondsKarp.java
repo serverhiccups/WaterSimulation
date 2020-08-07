@@ -2,21 +2,28 @@ package com.hiccup01.MaxFlow;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 
 public class EdmondsKarp implements FlowAlgorithm {
 	ArrayList<Junction> mutableNetwork;
 	ArrayList<Source> sources;
 	ArrayList<Sink> sinks;
-	ArrayList<ArrayList<Edge>> builtNetwork; // builtNetwork is our adjacency list.
+	List<List<Edge>> builtNetwork; // builtNetwork is our adjacency list.
 	private int sourceId;
 	private int sinkId;
+	private int maxNode;
 
 	public EdmondsKarp() {
+		this.reset();
+	}
+
+	public void reset() {
 		this.mutableNetwork = new ArrayList<>();
 		this.sources = new ArrayList<>();
 		this.sinks = new ArrayList<>();
 		this.builtNetwork = new ArrayList<>();
+		this.maxNode = 0;
 	}
 
 	public void connect(int src, int dest, int maxFlow) {
@@ -51,7 +58,7 @@ public class EdmondsKarp implements FlowAlgorithm {
 	}
 
 	private void buildNetwork() throws MaxFlowException {
-		int maxNode = 0;
+		this.maxNode = 0;
 		for (Junction j : this.mutableNetwork) { // We have to use a for loop here because Java doesn't allow lambda expressions to capture outside variables.
 			if (j.src > maxNode) maxNode = j.src;
 			if (j.dest > maxNode) maxNode = j.dest;
@@ -63,12 +70,9 @@ public class EdmondsKarp implements FlowAlgorithm {
 		for(Junction j : this.mutableNetwork) {
 			this.addJunction(j);
 		}
-		for(Source s : this.sources) {
-			if(s.id > maxNode) this.sources.remove(s);
-		}
-		for(Sink s : this.sinks) {
-			if(s.id > maxNode) this.sinks.remove(s);
-		}
+		final int mx = maxNode; // We have to define a *final* variable here because you cannot use non final variables in a lambda expression.
+		this.sources.removeIf(source -> source.id > mx);
+		this.sinks.removeIf(sink -> sink.id > mx);
 		if(sources.size() == 0) throw new MaxFlowException("There are no sources");
 		if(sinks.size() == 0) throw new MaxFlowException("There are no sinks");
 		this.sourceId = maxNode + 1;
@@ -82,7 +86,7 @@ public class EdmondsKarp implements FlowAlgorithm {
 		}
 	}
 
-	public void calculate() throws MaxFlowException {
+	public List<List<Edge>> calculate() throws MaxFlowException {
 		this.buildNetwork();
 		int flow = 0;
 		while(true) {
@@ -115,6 +119,12 @@ public class EdmondsKarp implements FlowAlgorithm {
 
 			flow += df;
 		}
+		for(List<Edge> v : this.builtNetwork) {
+			v.removeIf(edge -> edge.isReverse);
+			v.removeIf(edge -> edge.src > this.maxNode);
+			v.removeIf(edge -> edge.dest > this.maxNode);
+		}
 		System.out.println(flow);
+		return this.builtNetwork;
 	}
 }

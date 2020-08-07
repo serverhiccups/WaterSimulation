@@ -1,6 +1,7 @@
 package com.hiccup01;
 
 import com.hiccup01.JSprite.*;
+import com.hiccup01.MaxFlow.*;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -20,23 +21,46 @@ public class NetworkManager {
 	private int highestSpriteId = MIN_SPRITE_NUMBER;
 	private BufferedImage arrowImage = null;
 	public JFrame frame = null;
+	private FlowAlgorithm algorithm = null;
 
 	final int DEFAULT_X = 500;
 	final int DEFAULT_Y = 500;
 
-	public NetworkManager(JSpriteCanvas c, JFrame frame) throws Exception {
+	public NetworkManager(JSpriteCanvas c, JFrame frame, FlowAlgorithm algorithm) throws Exception {
 		this.canvas = c;
 		this.frame = frame;
 		this.arrowImage = ImageIO.read(new File("icons/arrow.png"));
+		this.algorithm = algorithm;
 	}
 
 	// Deserialise from a string.
 //	public NetworkManager(String s);
 
-	public void addNode() {
-		this.nodeList.add(new Node(DEFAULT_X, DEFAULT_Y, NodeType.JUNCTION));
+	public void addNode(NodeType type) {
+		this.nodeList.add(new Node(DEFAULT_X, DEFAULT_Y, 250, type));
 		this.updateView();
 
+	}
+	
+	public Node removeNode(Node n) {
+		ArrayList<Pipe> pipesToRemove = new ArrayList<>();
+		for(Pipe p : this.pipeList) {
+			if(p.source == n || p.destination == n) { // We need to remove this pipe, because one of its end s would be empty.
+				// We have to do this silly workaround instead of remove things directly in the loop, because we can't modify an array that we are iterating.
+				pipesToRemove.add(p);
+			}
+		}
+		for(Pipe p : pipesToRemove) {
+			this.removePipe(p);
+		}
+		this.nodeList.remove(n);
+		try {
+			this.canvas.removeSprite(n.spriteContainer.id);
+		} catch (JSpriteException e) {
+			System.err.println("Failed to remove a node");
+		}
+		this.updateView();
+		return n;
 	}
 
 	public void addPipe(Node source, Node destination, int maxCapacity) {
@@ -65,6 +89,13 @@ public class NetworkManager {
 			if((p.source == source && p.destination == destination) || (p.source == destination && p.destination == source)) return true;
 		}
 		return false;
+	}
+
+	public Pipe pipeBetween(Node source, Node destination) {
+		for(Pipe p : this.pipeList) {
+			if((p.source == source && p.destination == destination)) return p;
+		}
+		return null;
 	}
 
 	public void updateView() {
@@ -112,7 +143,45 @@ public class NetworkManager {
 		return null;
 	}
 
+	private void calculateFlow() {
+		this.algorithm.reset();
+		for(Pipe p : this.pipeList) {
+			this.algorithm.connect(this.nodeList.indexOf(p.source), this.nodeList.indexOf(p.destination), p.maxCapacity);
+		}
+		ArrayList<Sink> sinks = new ArrayList<>();
+		ArrayList<Source> sources = new ArrayList<>();
+		for(Node n : this.nodeList) {
+			if(n.type == NodeType.SINK) sinks.add(new Sink(this.nodeList.indexOf(n), n.capacity));
+			if(n.type == NodeType.SOURCE) sources.add(new Source(this.nodeList.indexOf(n), n.capacity));
+		}
+		this.algorithm.setSinks(sinks);
+		this.algorithm.setSources(sources);
+		try {
+			java.util.List<java.util.List<Edge>> output = this.algorithm.calculate();
+			for(java.util.List<Edge> v : output) {
+				for(Edge e : v) {
+					if(e.src >= this.nodeList.size() || e.dest >= this.nodeList.size()) {
+
+						continue; // Ignore the source and sink elements created by the algorithm.
+					}
+					try {
+						this.pipeBetween(this.nodeList.get(e.src), this.nodeList.get(e.dest)).flow = e.flow;
+					} catch(NullPointerException error) {
+						// I think that this occurs when there's a mismatch between our network and the network the algorithm has.
+						System.err.println("We got a NullPointer Exception:");
+						System.err.println("e.src: " + e.src + " e.dest: " + e.dest);
+						error.printStackTrace();
+					}
+				}
+			}
+		} catch (MaxFlowException e) {
+			System.err.println("An error occured while trying to calculate the flow of the network: " + e.toString());
+		}
+	}
+
 	private void updateView(JSpriteCanvas c) {
+		this.calculateFlow();
+
 		// Nodes
 		for(Node n : this.nodeList) {
 			JSprite sprite = null;
@@ -123,23 +192,23 @@ public class NetworkManager {
 				sprite.getVisual(sprite.getCurrentVisual()).setOffsetMode(JSpriteOffsetMode.CENTER);
 				((JSpriteVisualStack) sprite.getVisual(sprite.getCurrentVisual())).pushLayer(new JSpriteCircle(38, new Color(75, 75, 255)));
 				((JSpriteVisualStack) sprite.getVisual(sprite.getCurrentVisual())).top().setOffsetMode(JSpriteOffsetMode.CENTER);
-				((JSpriteVisualStack) sprite.getVisual(sprite.getCurrentVisual())).pushLayer(new JSpriteCircle(35, Color.blue));
+				switch(n.type) {
+					case JUNCTION:
+						((JSpriteVisualStack) sprite.getVisual(sprite.getCurrentVisual())).pushLayer(new JSpriteCircle(35, Color.blue));
+						break;
+					case SOURCE:
+						((JSpriteVisualStack) sprite.getVisual(sprite.getCurrentVisual())).pushLayer(new JSpriteCircle(35, Color.red));
+						break;
+					case SINK:
+						((JSpriteVisualStack) sprite.getVisual(sprite.getCurrentVisual())).pushLayer(new JSpriteCircle(35, Color.green));
+						break;
+				}
 				((JSpriteVisualStack) sprite.getVisual(sprite.getCurrentVisual())).top().setOffsetMode(JSpriteOffsetMode.CENTER);
 				JSpriteText label = new JSpriteText("");
 				label.setColour(Color.white);
 				label.setFont(new Font("Helvetica", Font.BOLD, 14));
 				label.setOffsetMode(JSpriteOffsetMode.CENTER);
-				switch (n.type) {
-					case JUNCTION:
-						label.setText("Junction");
-						break;
-					case SINK:
-						label.setText("Sink");
-						break;
-					case SOURCE:
-						label.setText("Source");
-						break;
-				}
+				label.setText(n.type.toString());
 				((JSpriteVisualStack) sprite.getVisual(sprite.getCurrentVisual())).pushLayer(label);
 				sprite.addMouseHandler(new NodeMouseHandler(n, this));
 				try {
@@ -168,6 +237,8 @@ public class NetworkManager {
 				((JSpriteVisualStack) sprite.getVisual(sprite.getCurrentVisual())).top().setOffsetMode(JSpriteOffsetMode.CENTER);
 				((JSpriteVisualStack) sprite.getVisual(sprite.getCurrentVisual())).pushLayer(new JSpriteRectangle(50, 20, Color.white));
 				((JSpriteVisualStack) sprite.getVisual(sprite.getCurrentVisual())).top().setOffsetMode(JSpriteOffsetMode.CENTER);
+				((JSpriteVisualStack) sprite.getVisual(sprite.getCurrentVisual())).pushLayer(new JSpriteRectangle(0, 20, new Color(0, 222, 252)));
+				((JSpriteVisualStack) sprite.getVisual(sprite.getCurrentVisual())).top().setOffsetMode(JSpriteOffsetMode.CENTER);
 				JSpriteText capacity = new JSpriteText("");
 				capacity.setFont(new Font("Helvetica", Font.PLAIN, 11));
 				capacity.setOffsetMode(JSpriteOffsetMode.CENTER);
@@ -191,6 +262,7 @@ public class NetworkManager {
 			sprite.yPosition = points[1];
 			((JSpriteCostume)((JSpriteVisualStack) sprite.getVisual(0)).getLayer(1)).setRotation(-1 * line.getRotation() - (1 * Math.PI / 4));
 			((JSpriteText)((JSpriteVisualStack) sprite.getVisual(0)).top()).setText(Integer.toString(p.maxCapacity));
+			((JSpriteRectangle)((JSpriteVisualStack) sprite.getVisual(0)).getLayer(4)).setSize((int) (50 * ((float)p.flow / (float)p.maxCapacity)), 20);
 			try {
 				c.sendToBack(p.spriteContainer.id);
 			} catch (Exception e) {

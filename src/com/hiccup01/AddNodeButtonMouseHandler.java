@@ -6,9 +6,11 @@ import com.hiccup01.JSprite.JSpriteMouseHandler;
 
 public class AddNodeButtonMouseHandler implements JSpriteMouseHandler {
 	NetworkManager networkManager = null;
+	NodeType type = null;
 
-	AddNodeButtonMouseHandler(NetworkManager networkManager) {
+	AddNodeButtonMouseHandler(NetworkManager networkManager, NodeType type) {
 		this.networkManager = networkManager;
+		this.type = type;
 	}
 
 	public JSpriteMouseEventDelegate scrollEvent(int amount) {
@@ -17,7 +19,7 @@ public class AddNodeButtonMouseHandler implements JSpriteMouseHandler {
 
 	@Override
 	public JSpriteMouseEventDelegate mouseClicked(JSpriteMouseEvent m) {
-		this.networkManager.addNode();
+		this.networkManager.addNode(this.type);
 		this.networkManager.updateView();
 		return new JSpriteMouseEventDelegate(true);
 	}

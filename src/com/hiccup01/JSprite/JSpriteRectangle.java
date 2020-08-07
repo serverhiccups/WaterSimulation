@@ -23,6 +23,22 @@ public class JSpriteRectangle implements JSpriteVisual {
 		this.c = c;
 	}
 
+	public void setXSize(int xSize) {
+		this.xSize = xSize;
+		this.updateOffsets();
+	}
+
+	public void setYSize(int ySize) {
+		this.ySize = ySize;
+		this.updateOffsets();
+	}
+
+	public void setSize(int x, int y) {
+		this.xSize = x;
+		this.ySize = y;
+		this.updateOffsets();
+	}
+
 	public Color getColour() {
 		return c;
 	}

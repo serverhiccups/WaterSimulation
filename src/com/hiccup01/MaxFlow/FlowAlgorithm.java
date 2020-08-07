@@ -1,11 +1,13 @@
 package com.hiccup01.MaxFlow;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public interface FlowAlgorithm {
 	void connect(int src, int dest, int maxFlow);
 	void disconnect(int src, int dest);
+	void reset();
 	void setSources(ArrayList<Source> sources);
 	void setSinks(ArrayList<Sink> sinks);
-	void calculate() throws MaxFlowException;
+	List<List<Edge>> calculate() throws MaxFlowException;
 }
