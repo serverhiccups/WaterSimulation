@@ -1,5 +1,8 @@
 package com.hiccup01.JSprite;
 
+/**
+ * Holds a JSprite and it's id together.
+ */
 public class JSpriteContainer {
 	public int id;
 	public JSprite sprite;

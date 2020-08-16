@@ -1,10 +1,6 @@
 package com.hiccup01.JSprite;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 
 public class JSpriteRectangle implements JSpriteVisual {
 	private int xOffset; // These offsets allow us to have per-costume offsets that allow us to have sprite x and y be the center.
@@ -46,6 +42,7 @@ public class JSpriteRectangle implements JSpriteVisual {
 	public void setColour(Color c) {
 		this.c = c;
 	}
+
 
 	public JSpriteOffsetMode getOffsetMode() {
 		return this.offsetMode;
