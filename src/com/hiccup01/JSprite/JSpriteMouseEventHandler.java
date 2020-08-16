@@ -82,6 +82,17 @@ public class JSpriteMouseEventHandler implements MouseListener, MouseMotionListe
 		}
 	}
 
+	private JSpriteButtonType transformPressedButtonType(MouseEvent e) {
+	    if((e.getModifiersEx() & MouseEvent.BUTTON1_DOWN_MASK) == MouseEvent.BUTTON1_DOWN_MASK) {
+			return JSpriteButtonType.PRIMARY;
+		} else if((e.getModifiersEx() & MouseEvent.BUTTON2_DOWN_MASK) == MouseEvent.BUTTON2_DOWN_MASK) { // Button 2 is middle click
+			return JSpriteButtonType.TERTIARY;
+		} else if((e.getModifiersEx() & MouseEvent.BUTTON3_DOWN_MASK) == MouseEvent.BUTTON3_DOWN_MASK) { // Button 3 is actually right click
+			return JSpriteButtonType.SECONDARY;
+		}
+	    return JSpriteButtonType.NONE;
+	}
+
 	private JSprite cascadeEvent(JSprite s, JSpriteMouseEventType t, JSpriteMouseEvent e) {
 		ListIterator<JSpriteMouseHandler> li = s.mouseHandlers.listIterator(s.mouseHandlers.size());
 		while(li.hasPrevious()) {
@@ -180,6 +191,7 @@ public class JSpriteMouseEventHandler implements MouseListener, MouseMotionListe
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
+		System.err.println("The mouse was released");
 		JSpriteButtonType b = this.transformButtonType(e.getButton());
 		JSpriteMouseEvent m;
 		switch (b) {
@@ -199,6 +211,7 @@ public class JSpriteMouseEventHandler implements MouseListener, MouseMotionListe
 				this.deliverEvent(JSpriteMouseEventType.MOUSE_RELEASE, e, this.tertiaryPressed);
 				break;
 			default:
+				System.err.println("Mouse release default");
 		}
 	}
 
@@ -218,10 +231,12 @@ public class JSpriteMouseEventHandler implements MouseListener, MouseMotionListe
 
 	@Override
 	public void mouseDragged(MouseEvent e) {
-//		System.err.println("handler got a drag event");
-		JSpriteButtonType b = this.transformButtonType(e.getButton());
+		System.err.println("handler got a drag event");
+		JSpriteButtonType b = this.transformPressedButtonType(e);
+		System.err.println("Button number: " + e.getButton());
 		switch (b) {
 			case PRIMARY:
+			    System.err.println("Primary drag");
 				this.deliverEvent(JSpriteMouseEventType.MOUSE_DRAG, e, this.primaryPressed);
 				break;
 			case SECONDARY:
@@ -229,9 +244,11 @@ public class JSpriteMouseEventHandler implements MouseListener, MouseMotionListe
 				this.deliverEvent(JSpriteMouseEventType.MOUSE_DRAG, e, this.secondaryPressed);
 				break;
 			case TERTIARY:
+				System.out.println("Tertiary drag?");
 				this.deliverEvent(JSpriteMouseEventType.MOUSE_DRAG, e, this.tertiaryPressed);
 				break;
 			default:
+				System.out.println("Default case?????");
 		}
 		this.createEnterExitEvents(e);
 	}
