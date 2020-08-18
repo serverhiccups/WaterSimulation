@@ -17,10 +17,10 @@ public class Main extends JFrame {
     }
 
     public void doGui() throws Exception {
-        this.setTitle("Water Simulation");
-        this.getContentPane().setPreferredSize(new Dimension(800, 640));
-        this.setResizable(false);
-        this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+        this.setTitle("Water Simulation"); // Set the window title.
+        this.getContentPane().setPreferredSize(new Dimension(800, 640)); // Set the size of the window.
+        this.setResizable(false); // Stop the user from resizing the window, so they can't accidentally cover anything up.
+        this.setDefaultCloseOperation(EXIT_ON_CLOSE); // Quit the app when the main window is closed.
         // Main UI Elements
         JSpriteCanvas canvas = new JSpriteCanvas(); // Canvas to display everything on.
 //        canvas.debugMode = true;
@@ -52,14 +52,12 @@ public class Main extends JFrame {
         // Separator
         JSprite separator = new JSprite(0, 48, new JSpriteLine(0, 800, 1));
         separator.getVisual(separator.getCurrentVisual()).setOffsetMode(JSpriteOffsetMode.TOP_RIGHT);
-
         canvas.addSprite(separator, 1);
-//        JSprite background = new JSprite(0, 49, new JSpriteRectangle(800, 640 - 49));
-//        canvas.addSprite(background, 2);
 
         // Network Manager
         NetworkManager manager = new NetworkManager(canvas, this, new EdmondsKarp());
 
+        // Add the mouse handlers so that the buttons actually do something.
         addNodeButton.addMouseHandler(new AddNodeButtonMouseHandler(manager, NodeType.JUNCTION));
         addSourceButton.addMouseHandler(new AddNodeButtonMouseHandler(manager, NodeType.SOURCE));
         addSinkButton.addMouseHandler(new AddNodeButtonMouseHandler(manager, NodeType.SINK));

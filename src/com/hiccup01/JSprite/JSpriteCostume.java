@@ -8,7 +8,7 @@ import java.io.File;
 import java.io.IOException;
 
 /**
- * The visual that represents and image.
+ * The visual that represents an image.
  */
 public class JSpriteCostume implements JSpriteVisual {
 	BufferedImage costume; // The image.

@@ -244,9 +244,7 @@ public class JSpriteMouseEventHandler implements MouseListener, MouseMotionListe
 				this.primaryPressed = this.deliverEvent(JSpriteMouseEventType.MOUSE_PRESS, e);
 				break;
 			case SECONDARY:
-				System.err.println("Creating a secondary event");
 				this.secondaryPressed = this.deliverEvent(JSpriteMouseEventType.MOUSE_PRESS, e);
-				System.out.println("Target delegate for secondary press was " + this.secondaryPressed);
 				break;
 			case TERTIARY:
 				this.tertiaryPressed = this.deliverEvent(JSpriteMouseEventType.MOUSE_PRESS, e);
@@ -257,23 +255,17 @@ public class JSpriteMouseEventHandler implements MouseListener, MouseMotionListe
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		System.err.println("The mouse was released");
+	    // Here we ignore the position of the actual release, because we are deliverign the event to the sprite that was originally clicked on.
 		JSpriteButtonType b = this.transformButtonType(e.getButton());
 		JSpriteMouseEvent m;
 		switch (b) {
 			case PRIMARY:
-//				m = this.transformMouseEvent(e, JSpriteMouseEventType.MOUSE_RELEASE, this.primaryPressed.getUpperLeftX(), this.primaryPressed.getUpperLeftY());
-//				this.cascadeEvent(this.primaryPressed, JSpriteMouseEventType.MOUSE_RELEASE, m);
 				this.deliverEvent(JSpriteMouseEventType.MOUSE_RELEASE, e, this.primaryPressed);
 				break;
 			case SECONDARY:
-//				m = this.transformMouseEvent(e, JSpriteMouseEventType.MOUSE_RELEASE, this.secondaryPressed.getUpperLeftX(), this.secondaryPressed.getUpperLeftY());
-//				this.cascadeEvent(this.secondaryPressed, JSpriteMouseEventType.MOUSE_RELEASE, m);
 				this.deliverEvent(JSpriteMouseEventType.MOUSE_RELEASE, e, this.secondaryPressed);
 				break;
 			case TERTIARY:
-//				m = this.transformMouseEvent(e, JSpriteMouseEventType.MOUSE_RELEASE, this.tertiaryPressed.getUpperLeftX(), this.tertiaryPressed.getUpperLeftY());
-//				this.cascadeEvent(this.tertiaryPressed, JSpriteMouseEventType.MOUSE_RELEASE, m);
 				this.deliverEvent(JSpriteMouseEventType.MOUSE_RELEASE, e, this.tertiaryPressed);
 				break;
 			default:
@@ -284,29 +276,23 @@ public class JSpriteMouseEventHandler implements MouseListener, MouseMotionListe
 	@Override
 	public void mouseEntered(MouseEvent e) {
 		// Because this fires on canvas boundaries and not on sprite boundaries, I'm not sure how useful this is.
-//		this.deliverEvent(JSpriteMouseEventType.MOUSE_ENTER, e);
 		this.createEnterExitEvents(e);
 	}
 
 	@Override
 	public void mouseExited(MouseEvent e) {
 		// Because this fires on canvas boundaries and not on sprite boundaries, I'm not sure how useful this is.
-//		this.deliverEvent(JSpriteMouseEventType.MOUSE_EXIT, e);
 		this.createEnterExitEvents(e);
 	}
 
 	@Override
 	public void mouseDragged(MouseEvent e) {
-		System.err.println("handler got a drag event");
 		JSpriteButtonType b = this.transformPressedButtonType(e);
-		System.err.println("Button number: " + e.getButton());
 		switch (b) {
 			case PRIMARY:
-			    System.err.println("Primary drag");
 				this.deliverEvent(JSpriteMouseEventType.MOUSE_DRAG, e, this.primaryPressed);
 				break;
 			case SECONDARY:
-//				System.out.println("Delivering a drag to " + this.secondaryPressed);
 				this.deliverEvent(JSpriteMouseEventType.MOUSE_DRAG, e, this.secondaryPressed);
 				break;
 			case TERTIARY:

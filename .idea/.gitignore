@@ -2,6 +2,8 @@
 /workspace.xml
 out/**
 
+doc/
+
 # Created by https://www.gitignore.io/api/java,macos
 # Edit at https://www.gitignore.io/?templates=java,macos
 

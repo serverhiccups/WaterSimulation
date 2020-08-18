@@ -10,18 +10,21 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
 
+/**
+ * The network manager is the heart of the program.
+ */
 public class NetworkManager {
 	// Set a minimum sprite number, so that our ids don't clash with those of other UI elements.
 	final int MIN_SPRITE_NUMBER = 999;
 
 	private ArrayList<Node> nodeList = new ArrayList<>();
 	private ArrayList<Pipe> pipeList = new ArrayList<>();
-	public PipePreview pipePreview = null;
-	public JSpriteCanvas canvas = null;
-	private int highestSpriteId = MIN_SPRITE_NUMBER;
-	private BufferedImage arrowImage = null;
-	public JFrame frame = null;
-	private FlowAlgorithm algorithm = null;
+	public PipePreview pipePreview = null; // The preview of the pipe being drawn.
+	public JSpriteCanvas canvas = null; // The canvas for the network to be drawn on.
+	private int highestSpriteId = MIN_SPRITE_NUMBER; // initialise the highest sprite number.
+	private BufferedImage arrowImage = null; // The arrow that we use to show the direction of the pipes.
+	public JFrame frame = null; // The frame that our canvas is in, so that we can properly position dialog windows.
+	private FlowAlgorithm algorithm = null; // The network flow algorithm to use.
 
 	final int DEFAULT_X = 500;
 	final int DEFAULT_Y = 500;
@@ -33,8 +36,6 @@ public class NetworkManager {
 		this.algorithm = algorithm;
 	}
 
-	// Deserialise from a string.
-//	public NetworkManager(String s);
 
 	public void addNode(NodeType type) {
 		this.nodeList.add(new Node(DEFAULT_X, DEFAULT_Y, 250, type));
@@ -293,6 +294,4 @@ public class NetworkManager {
 		}
 		this.canvas.repaint();
 	}
-
-//	public String serialise();
 }
