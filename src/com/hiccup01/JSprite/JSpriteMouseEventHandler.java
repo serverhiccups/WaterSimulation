@@ -157,15 +157,31 @@ public class JSpriteMouseEventHandler implements MouseListener, MouseMotionListe
 		while(li.hasPrevious()) {
 			JSpriteMouseHandler next = li.previous(); // Get it.
 			//					System.err.println("Delivering move event to sprite");
-			JSpriteMouseEventDelegate status = switch (t) { // Call the appropriate handler for the kind of event.
-				case MOUSE_CLICK -> next.mouseClicked(e);
-				case MOUSE_ENTER -> next.mouseEntered(e);
-				case MOUSE_EXIT -> next.mouseExited(e);
-				case MOUSE_PRESS -> next.mousePressed(e);
-				case MOUSE_RELEASE -> next.mouseReleased(e);
-				case MOUSE_MOVE -> next.mouseMoved(e);
-				case MOUSE_DRAG -> next.mouseDragged(e);
-			};
+			// Call the appropriate handler for the kind of event.
+			JSpriteMouseEventDelegate status = null;
+			switch (t) {
+				case MOUSE_CLICK:
+					status = next.mouseClicked(e);
+					break;
+				case MOUSE_ENTER:
+					status = next.mouseEntered(e);
+					break;
+				case MOUSE_EXIT:
+					status = next.mouseExited(e);
+					break;
+				case MOUSE_PRESS:
+					status = next.mousePressed(e);
+					break;
+				case MOUSE_RELEASE:
+					status = next.mouseReleased(e);
+					break;
+				case MOUSE_MOVE:
+					status = next.mouseMoved(e);
+					break;
+				case MOUSE_DRAG:
+					status = next.mouseDragged(e);
+					break;
+			}
 			if(status == null) status = new JSpriteMouseEventDelegate(false); // If status is null, we can assume that the handler would want the .CONTINUE enum variant.
 			if(status.isComplete()) { // If the handler says we're done, stop calling handlers.
 //				if(e.buttonType == JSpriteButtonType.SECONDARY) System.err.println("Got a COMPLETE delegate status on a secondary press");

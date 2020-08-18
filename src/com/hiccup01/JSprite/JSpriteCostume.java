@@ -25,7 +25,7 @@ public class JSpriteCostume implements JSpriteVisual {
 	 * @throws IOException // Thrown if the file cannot be found.
 	 */
 	public JSpriteCostume(String filename) throws IOException {
-		this.costume = ImageIO.read(new File(filename)); // Read the image using ImageIO.
+		this.costume = ImageIO.read(getClass().getResource(filename)); // Read the image using ImageIO.
 		this.updateOffsets();
 	}
 

@@ -8,6 +8,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.net.URL;
 import java.util.ArrayList;
 
 /**
@@ -32,7 +33,8 @@ public class NetworkManager {
 	public NetworkManager(JSpriteCanvas c, JFrame frame, FlowAlgorithm algorithm) throws Exception {
 		this.canvas = c;
 		this.frame = frame;
-		this.arrowImage = ImageIO.read(new File("icons/arrow.png"));
+//		this.arrowImage = ImageIO.read(new File("icons/arrow.png"));
+        this.arrowImage = ImageIO.read(getClass().getResource("/icons/arrow.png"));
 		this.algorithm = algorithm;
 	}
 

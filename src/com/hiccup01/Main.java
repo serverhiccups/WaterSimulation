@@ -26,7 +26,7 @@ public class Main extends JFrame {
 //        canvas.debugMode = true;
 
         // Add Node Button
-        JSprite addNodeButton = new JSprite(8, 8, new JSpriteCostume("icons/add.png"));
+        JSprite addNodeButton = new JSprite(8, 8, new JSpriteCostume("/icons/add.png"));
         addNodeButton.getVisual(addNodeButton.getCurrentVisual()).setOffsetMode(JSpriteOffsetMode.TOP_RIGHT);
         ((JSpriteCostume)addNodeButton.getVisual(addNodeButton.getCurrentVisual())).fullHitbox = true;
         canvas.addSprite(addNodeButton, 0);
