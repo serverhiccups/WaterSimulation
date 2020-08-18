@@ -49,6 +49,15 @@ public class Main extends JFrame {
         ((JSpriteText)((JSpriteVisualStack)addSinkButton.getVisual(0)).getLayer(1)).setFont(new Font("Helvetica", Font.BOLD, 14));
         canvas.addSprite(addSinkButton, 4);
 
+        // Help Button
+        JSprite helpButton = new JSprite(128, 8, new JSpriteVisualStack(new ArrayList<JSpriteVisual>(Arrays.asList(
+                new JSpriteCircle(16, Color.white),
+                new JSpriteText("?")
+        ))));
+        helpButton.getVisual(0).setOffsetMode(JSpriteOffsetMode.TOP_RIGHT);
+        ((JSpriteText)((JSpriteVisualStack)helpButton.getVisual(0)).getLayer(1)).setFont(new Font("Helvetica", Font.BOLD, 18));
+        canvas.addSprite(helpButton, 5);
+
         // Separator
         JSprite separator = new JSprite(0, 48, new JSpriteLine(0, 800, 1));
         separator.getVisual(separator.getCurrentVisual()).setOffsetMode(JSpriteOffsetMode.TOP_RIGHT);
@@ -61,6 +70,7 @@ public class Main extends JFrame {
         addNodeButton.addMouseHandler(new AddNodeButtonMouseHandler(manager, NodeType.JUNCTION));
         addSourceButton.addMouseHandler(new AddNodeButtonMouseHandler(manager, NodeType.SOURCE));
         addSinkButton.addMouseHandler(new AddNodeButtonMouseHandler(manager, NodeType.SINK));
+        helpButton.addMouseHandler(new HelpButtonMouseHandler());
 
         // Setup the window
         this.add(canvas);
