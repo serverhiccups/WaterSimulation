@@ -12,6 +12,10 @@ public class PipePreviewMouseHandler implements JSpriteMouseHandler {
 
 	}
 
+	private int clamp(int val, int min, int max) {
+		return Math.max(min, Math.min(max, val));
+	}
+
 	@Override
 	public JSpriteMouseEventDelegate scrollEvent(int amount) {
 		return null;
@@ -44,7 +48,8 @@ public class PipePreviewMouseHandler implements JSpriteMouseHandler {
 	@Override
 	public JSpriteMouseEventDelegate mouseReleased(JSpriteMouseEvent m) {
 		System.err.println("Attempting to land the preview");
-		this.networkManager.landPreview(m.getX(JSpriteCoordinateType.VIRTUAL), m.getY(JSpriteCoordinateType.VIRTUAL));
+//		this.networkManager.landPreview(m.getX(JSpriteCoordinateType.VIRTUAL), m.getY(JSpriteCoordinateType.VIRTUAL));
+        this.networkManager.landPreview(this.self.endX, this.self.endY);
 		this.networkManager.updateView();
 		return JSpriteMouseEventDelegate.COMPLETED;
 	}
@@ -52,7 +57,10 @@ public class PipePreviewMouseHandler implements JSpriteMouseHandler {
 	@Override
 	public JSpriteMouseEventDelegate mouseDragged(JSpriteMouseEvent m) {
 		System.err.println("Preview got a drag event");
-		this.self.setEnd(m.getX(JSpriteCoordinateType.VIRTUAL), m.getY(JSpriteCoordinateType.VIRTUAL));
+		int x = this.clamp(m.getX(JSpriteCoordinateType.VIRTUAL), 0, 800);
+		int y = this.clamp(m.getY(JSpriteCoordinateType.VIRTUAL), 48, 640);
+		this.self.setEnd(x, y);
+//		this.self.setEnd(m.getX(JSpriteCoordinateType.VIRTUAL), m.getY(JSpriteCoordinateType.VIRTUAL));
 		this.networkManager.updateView();
 		return JSpriteMouseEventDelegate.COMPLETED;
 	}
