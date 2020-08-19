@@ -11,13 +11,16 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 
+/**
+ * Open the help file when the user clicks the help button.
+ */
 public class HelpButtonMouseHandler implements JSpriteMouseHandler {
     File helpFile;
 
     public HelpButtonMouseHandler() throws IOException {
-        this.helpFile = File.createTempFile("wshelp", ".txt");
+        this.helpFile = File.createTempFile("wshelp", ".txt"); // Create a temporary file.
         try (InputStream is = getClass().getResourceAsStream("/doc/help.md")) {
-            Files.copy(is, this.helpFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+            Files.copy(is, this.helpFile.toPath(), StandardCopyOption.REPLACE_EXISTING); // Copy the help file from our jar to the temp file.
         }
     }
 
@@ -29,9 +32,8 @@ public class HelpButtonMouseHandler implements JSpriteMouseHandler {
     @Override
     public JSpriteMouseEventDelegate mouseClicked(JSpriteMouseEvent m) {
         try {
-            Desktop.getDesktop().open(this.helpFile);
+            Desktop.getDesktop().open(this.helpFile); // Open the help file using the default application
         } catch (Exception e) {
-            System.err.println(e.getCause());
             System.err.println("Failed to open the help file.");
         }
         return JSpriteMouseEventDelegate.COMPLETED;

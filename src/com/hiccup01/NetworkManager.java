@@ -12,7 +12,7 @@ import java.net.URL;
 import java.util.ArrayList;
 
 /**
- * The network manager is the heart of the program.
+ * The network manager is the heart of the program. It handles all of the application data and drawing to the screen.
  */
 public class NetworkManager {
 	// Set a minimum sprite number, so that our ids don't clash with those of other UI elements.
@@ -30,33 +30,47 @@ public class NetworkManager {
 	final int DEFAULT_X = 500;
 	final int DEFAULT_Y = 500;
 
+	/**
+	 * Create a NetworkManager.
+	 * @param c This canvas for the network manager to draw to.
+	 * @param frame The JFrame that the canvas is contained in.
+	 * @param algorithm The flow algorithm.
+	 * @throws Exception Thrown if the arrow image cannot be read from the jar.
+	 */
 	public NetworkManager(JSpriteCanvas c, JFrame frame, FlowAlgorithm algorithm) throws Exception {
 		this.canvas = c;
 		this.frame = frame;
-//		this.arrowImage = ImageIO.read(new File("icons/arrow.png"));
-        this.arrowImage = ImageIO.read(getClass().getResource("/icons/arrow.png"));
+        this.arrowImage = ImageIO.read(getClass().getResource("/icons/arrow.png")); // Read our image of an arrow from the jar.
 		this.algorithm = algorithm;
 	}
 
-
+	/**
+	 * Add a node to the simulation.
+	 * @param type The type of the node (one of junction, source or sink).
+	 */
 	public void addNode(NodeType type) {
 		this.nodeList.add(new Node(DEFAULT_X, DEFAULT_Y, 250, type));
 		this.updateView();
 
 	}
-	
+
+	/**
+	 * Removes a node from the simulation.
+	 * @param n The node to remove.
+	 * @return The node that was removed.
+	 */
 	public Node removeNode(Node n) {
-		ArrayList<Pipe> pipesToRemove = new ArrayList<>();
+		ArrayList<Pipe> pipesToRemove = new ArrayList<>(); // The list of pipes that we need to remove because they connect to this node.
 		for(Pipe p : this.pipeList) {
 			if(p.source == n || p.destination == n) { // We need to remove this pipe, because one of its end s would be empty.
 				// We have to do this silly workaround instead of remove things directly in the loop, because we can't modify an array that we are iterating.
 				pipesToRemove.add(p);
 			}
 		}
-		for(Pipe p : pipesToRemove) {
+		for(Pipe p : pipesToRemove) { // Remove the pipes that need removing.
 			this.removePipe(p);
 		}
-		this.nodeList.remove(n);
+		this.nodeList.remove(n); // Remove the node from the node list.
 		try {
 			this.canvas.removeSprite(n.spriteContainer.id);
 		} catch (JSpriteException e) {
@@ -66,20 +80,30 @@ public class NetworkManager {
 		return n;
 	}
 
+	/**
+	 * Add a pipe to the simulation.
+	 * @param source The source of the pipe.
+	 * @param destination The destination of the pipe.
+	 * @param maxCapacity The maximum capacity of the pipe.
+	 */
 	public void addPipe(Node source, Node destination, int maxCapacity) {
-		if(this.pipeExists(source, destination)) {
+		if(this.pipeExists(source, destination)) { // Don't try to add a pipe that already exists.
 			this.updateView();
 			return;
 		}
-		System.out.println("Connected Node " + source + " to node " + destination);
-		this.pipeList.add(new Pipe(source, destination, maxCapacity, 0));
+		this.pipeList.add(new Pipe(source, destination, maxCapacity, 0)); // Add the pipe to the pipe list.
 		this.updateView();
 	}
 
+	/**
+	 * Remove a pipe from the simulation.
+	 * @param p The pipe to remove.
+	 * @return The pipe that was removed.
+	 */
 	public Pipe removePipe(Pipe p) {
-		this.pipeList.remove(p);
+		this.pipeList.remove(p); // Remove the pipe from the pipe list.
 		try {
-			this.canvas.removeSprite(p.spriteContainer.id);
+			this.canvas.removeSprite(p.spriteContainer.id); // Remove the pipe from the canvas.
 		} catch (Exception e) {
 			System.err.println("Failed to remove a pipe.");
 		}
@@ -87,6 +111,12 @@ public class NetworkManager {
 		return p;
 	}
 
+	/**
+	 * Checks whether or not a pipe exists between two nodes.
+	 * @param source The first end of the pipe.
+	 * @param destination The second end of the pipe.
+	 * @return True if the pipe exists.
+	 */
 	public boolean pipeExists(Node source, Node destination) {
 		for(Pipe p : this.pipeList) {
 			if((p.source == source && p.destination == destination) || (p.source == destination && p.destination == source)) return true;
@@ -94,6 +124,12 @@ public class NetworkManager {
 		return false;
 	}
 
+	/**
+	 * Finds the pipe between the source and the destination.
+	 * @param source The source.
+	 * @param destination The destination.
+	 * @return The pipe, if one exists, or null if one doesn't.
+	 */
 	public Pipe pipeBetween(Node source, Node destination) {
 		for(Pipe p : this.pipeList) {
 			if((p.source == source && p.destination == destination)) return p;
@@ -101,6 +137,9 @@ public class NetworkManager {
 		return null;
 	}
 
+	/**
+	 * Draws the canvas based on the data.
+	 */
 	public void updateView() {
 		this.updateView(this.canvas);
 	}
