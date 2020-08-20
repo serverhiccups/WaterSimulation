@@ -100,6 +100,7 @@ public class NodeMouseHandler implements JSpriteMouseHandler {
 
 	@Override
 	public JSpriteMouseEventDelegate mouseDragged(JSpriteMouseEvent m) {
+		System.out.println("dragagagagag");
 		this.self.x = this.clamp(m.getX(JSpriteCoordinateType.VIRTUAL), 38, 800 - 38);
 		this.self.y = this.clamp(m.getY(JSpriteCoordinateType.VIRTUAL), 48 + 38, 640 - 38);
 		try {

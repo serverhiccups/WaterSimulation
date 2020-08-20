@@ -7,7 +7,7 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
+import java.io.*;
 import java.net.URL;
 import java.util.ArrayList;
 
@@ -42,6 +42,13 @@ public class NetworkManager {
 		this.frame = frame;
         this.arrowImage = ImageIO.read(getClass().getResource("/icons/arrow.png")); // Read our image of an arrow from the jar.
 		this.algorithm = algorithm;
+		this.init();
+	}
+
+	public void init() {
+		while(this.nodeList.size() > 0) {
+			this.removeNode(this.nodeList.get(0));
+		}
 	}
 
 	/**
@@ -334,5 +341,27 @@ public class NetworkManager {
 			System.err.println("Updated pipe preview position");
 		}
 		this.canvas.repaint();
+	}
+
+	public void serialise(String path) throws Exception {
+		FileOutputStream file = new FileOutputStream(path);
+		ObjectOutputStream oos = new ObjectOutputStream(file);
+		oos.writeObject(this.nodeList);
+		oos.writeObject(this.pipeList);
+		file.close();
+	}
+
+	public void deserialise(String path) throws Exception {
+		this.init();
+		FileInputStream file = new FileInputStream(path);
+		ObjectInputStream ois = new ObjectInputStream(file);
+		try {
+			ArrayList<Node> nodes = (ArrayList<Node>)ois.readObject();
+			this.nodeList = nodes;
+			ArrayList<Pipe> pipes = (ArrayList<Pipe>)ois.readObject();
+			this.pipeList = pipes;
+		} catch (Exception e) {
+			throw e;
+		}
 	}
 }

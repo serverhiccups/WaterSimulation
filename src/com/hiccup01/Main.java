@@ -58,6 +58,24 @@ public class Main extends JFrame {
         ((JSpriteText)((JSpriteVisualStack)helpButton.getVisual(0)).getLayer(1)).setFont(new Font("Helvetica", Font.BOLD, 18));
         canvas.addSprite(helpButton, 5);
 
+        // Save Button
+        JSprite saveButton = new JSprite(168, 8, new JSpriteVisualStack(new ArrayList<JSpriteVisual>(Arrays.asList(
+                new JSpriteCircle(16, Color.white),
+                new JSpriteCostume("/icons/save.png")
+        ))));
+        saveButton.getVisual(0).setOffsetMode(JSpriteOffsetMode.TOP_RIGHT);
+        ((JSpriteCostume)((JSpriteVisualStack)saveButton.getVisual(0)).getLayer(1)).setOffsetMode(JSpriteOffsetMode.CENTER);
+        canvas.addSprite(saveButton, 6);
+
+        // Load Button
+        JSprite loadButton = new JSprite(208, 8, new JSpriteVisualStack(new ArrayList<JSpriteVisual>(Arrays.asList(
+                new JSpriteCircle(16, Color.white),
+                new JSpriteCostume("/icons/folder.png")
+        ))));
+        loadButton.getVisual(0).setOffsetMode(JSpriteOffsetMode.TOP_RIGHT);
+        ((JSpriteCostume)((JSpriteVisualStack)loadButton.getVisual(0)).getLayer(1)).setOffsetMode(JSpriteOffsetMode.CENTER);
+        canvas.addSprite(loadButton, 7);
+
         // Separator
         JSprite separator = new JSprite(0, 48, new JSpriteLine(0, 800, 1));
         separator.getVisual(separator.getCurrentVisual()).setOffsetMode(JSpriteOffsetMode.TOP_RIGHT);
@@ -71,7 +89,13 @@ public class Main extends JFrame {
         addSourceButton.addMouseHandler(new AddNodeButtonMouseHandler(manager, NodeType.SOURCE));
         addSinkButton.addMouseHandler(new AddNodeButtonMouseHandler(manager, NodeType.SINK));
         helpButton.addMouseHandler(new HelpButtonMouseHandler());
+        saveButton.addMouseHandler(new SaveLoadMouseHandler(manager, false));
+        loadButton.addMouseHandler(new SaveLoadMouseHandler(manager, true));
 
+//        manager.addNode(NodeType.SOURCE);
+//        manager.serialise("/Users/eli/test.wsn");
+//        manager.deserialise("/Users/eli/test.wsn");
+//        manager.updateView();
         // Setup the window
         this.add(canvas);
         this.pack();
@@ -79,5 +103,6 @@ public class Main extends JFrame {
         this.toFront();
         this.setVisible(true);
         this.repaint();
+
     }
 }

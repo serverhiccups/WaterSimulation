@@ -1,6 +1,8 @@
 package com.hiccup01;
 
-public enum NodeType {
+import java.io.Serializable;
+
+public enum NodeType implements Serializable {
 	SOURCE,
 	SINK,
 	JUNCTION;
