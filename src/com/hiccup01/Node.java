@@ -7,6 +7,9 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
+/**
+ * Node represents something that can connect pipes together. May or may not be a source or sink.
+ */
 public class Node implements Serializable {
 	public int x = 0;
 	public int y = 0;

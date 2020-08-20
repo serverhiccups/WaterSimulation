@@ -19,7 +19,7 @@ public class AddNodeButtonMouseHandler implements JSpriteMouseHandler {
 
 	@Override
 	public JSpriteMouseEventDelegate mouseClicked(JSpriteMouseEvent m) {
-		this.networkManager.addNode(this.type);
+		this.networkManager.addNode(this.type); // Add the node.
 		this.networkManager.updateView();
 		return new JSpriteMouseEventDelegate(true);
 	}

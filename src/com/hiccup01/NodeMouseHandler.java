@@ -4,8 +4,11 @@ import com.hiccup01.JSprite.*;
 
 import javax.swing.*;
 
+/**
+ * NodeMouseHandler handles what happens when you use your mouse on a node.
+ */
 public class NodeMouseHandler implements JSpriteMouseHandler {
-	Node self = null;
+	Node self = null; // The node itself.
 	NetworkManager networkManager = null;
 
 	public NodeMouseHandler(Node self, NetworkManager networkManager) {
@@ -17,12 +20,16 @@ public class NodeMouseHandler implements JSpriteMouseHandler {
 		return Math.max(min, Math.min(max, val));
 	}
 
+	/**
+	 * Show a series of dialogs that lets the user edit this Node.
+	 */
 	private void displayEditDialog() {
 		Object[] options = {
 				"Cancel",
 				"Change " + this.self.type.toString() + " Capacity",
 				"Delete this " + this.self.type.toString()
 		};
+		// Show the command selection dialog.
 		int choice = JOptionPane.showOptionDialog(this.networkManager.frame,
 				"What would you like to do?",
 				"Edit " + this.self.type.toString(),
@@ -34,27 +41,29 @@ public class NodeMouseHandler implements JSpriteMouseHandler {
 				return;
 			case 1: // Change capacity
 				if(this.self.type == NodeType.JUNCTION) {
+					// You can't change the capacity of a junction, because junctions don't have capacity.
 					JOptionPane.showMessageDialog(this.networkManager.frame, "You cannot change the capacity of a Junction", "Error", JOptionPane.ERROR_MESSAGE);
 					return;
 				}
+				// Ask the user for a capacity.
 				String capacity = (String)JOptionPane.showInputDialog(this.networkManager.frame, "Please enter the new capacity:", "New Capacity", JOptionPane.QUESTION_MESSAGE, null, null, this.self.capacity);
-				if(capacity == null || capacity.length() == 0) {
+				if(capacity == null || capacity.length() == 0) { // Make sure that the user entered something.
 					JOptionPane.showMessageDialog(this.networkManager.frame, "Please enter a valid capacity (A whole number above 0)", "Error", JOptionPane.ERROR_MESSAGE);
 					return;
 				}
 				int capNumber = 0;
 				try {
-					capNumber = Integer.parseInt(capacity);
+					capNumber = Integer.parseInt(capacity); // Try to turn what the user entered into a capacity.
 					if(capNumber < 0) throw new Exception();
 				} catch (Exception e) {
 					JOptionPane.showMessageDialog(this.networkManager.frame, "Please enter a valid capacity (A whole number above 0)", "Error", JOptionPane.ERROR_MESSAGE);
 					return;
 				}
-				this.self.capacity = capNumber;
+				this.self.capacity = capNumber; // The the node capacity.
 				return;
 			case 2: // Delete this node
+				// Make sure the user wants to delete this node.
 				int confirm = JOptionPane.showConfirmDialog(this.networkManager.frame, "Are you sure?", "Confirm", JOptionPane.YES_NO_OPTION);
-				System.out.println("confirm option was " + confirm);
 				if(confirm == 0) { // Yes
 					this.networkManager.removeNode(this.self);
 				} else return;
@@ -68,7 +77,7 @@ public class NodeMouseHandler implements JSpriteMouseHandler {
 
 	@Override
 	public JSpriteMouseEventDelegate mouseClicked(JSpriteMouseEvent m) {
-		this.displayEditDialog();
+		this.displayEditDialog(); // Show the command dialog.
 		this.networkManager.updateView();
 		return JSpriteMouseEventDelegate.COMPLETED;
 	}
@@ -85,9 +94,7 @@ public class NodeMouseHandler implements JSpriteMouseHandler {
 
 	@Override
 	public JSpriteMouseEventDelegate mousePressed(JSpriteMouseEvent m) {
-		System.err.println("Node got a mouse press");
-		if(m.buttonType == JSpriteButtonType.SECONDARY) { // The user is trying to link pipes.
-			System.err.println("Creating a PipePreview");
+		if(m.buttonType == JSpriteButtonType.SECONDARY) { // Right click means that the user is trying to link pipes.
 			return new JSpriteMouseEventDelegate(this.networkManager.getPipePreview(m.getX(JSpriteCoordinateType.VIRTUAL), m.getY(JSpriteCoordinateType.VIRTUAL), this.self));
 		}
 		return JSpriteMouseEventDelegate.COMPLETED;
@@ -99,8 +106,7 @@ public class NodeMouseHandler implements JSpriteMouseHandler {
 	}
 
 	@Override
-	public JSpriteMouseEventDelegate mouseDragged(JSpriteMouseEvent m) {
-		System.out.println("dragagagagag");
+	public JSpriteMouseEventDelegate mouseDragged(JSpriteMouseEvent m) { // Allow the user to move the node.
 		this.self.x = this.clamp(m.getX(JSpriteCoordinateType.VIRTUAL), 38, 800 - 38);
 		this.self.y = this.clamp(m.getY(JSpriteCoordinateType.VIRTUAL), 48 + 38, 640 - 38);
 		try {

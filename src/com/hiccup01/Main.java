@@ -92,10 +92,6 @@ public class Main extends JFrame {
         saveButton.addMouseHandler(new SaveLoadMouseHandler(manager, false));
         loadButton.addMouseHandler(new SaveLoadMouseHandler(manager, true));
 
-//        manager.addNode(NodeType.SOURCE);
-//        manager.serialise("/Users/eli/test.wsn");
-//        manager.deserialise("/Users/eli/test.wsn");
-//        manager.updateView();
         // Setup the window
         this.add(canvas);
         this.pack();

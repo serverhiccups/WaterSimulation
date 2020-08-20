@@ -7,6 +7,9 @@ import com.hiccup01.JSprite.JSpriteMouseHandler;
 import javax.swing.*;
 import java.io.File;
 
+/**
+ * SaveLoadMouseHandler handles the GUI for saving and loading.
+ */
 public class SaveLoadMouseHandler implements JSpriteMouseHandler {
     private boolean isLoad;
     private NetworkManager manager = null;
@@ -24,28 +27,28 @@ public class SaveLoadMouseHandler implements JSpriteMouseHandler {
     @Override
     public JSpriteMouseEventDelegate mouseClicked(JSpriteMouseEvent m) {
         if(isLoad) { // We are loading
-            JFileChooser chooser = new JFileChooser();
-            chooser.setDialogTitle("Select a network to load");
-            int selection = chooser.showOpenDialog(this.manager.canvas);
+            JFileChooser chooser = new JFileChooser(); // Create the file chooser
+            chooser.setDialogTitle("Select a network to load"); // Set the title.
+            int selection = chooser.showOpenDialog(this.manager.canvas); // Open the dialog
 
-            if(selection == JFileChooser.APPROVE_OPTION) {
-                File loadLocation = chooser.getSelectedFile();
+            if(selection == JFileChooser.APPROVE_OPTION) { // If we didn't cancel.
+                File loadLocation = chooser.getSelectedFile(); // Get the file to load.
                 try {
-                    this.manager.deserialise(loadLocation.getAbsolutePath());
-                    this.manager.updateView();
+                    this.manager.deserialise(loadLocation.getAbsolutePath()); // Deserialise the network from the file.
+                    this.manager.updateView(); // Show the new network.
                 } catch (Exception e) {
                     System.err.println("Failed to load. Did you choose a valid network?");
                 }
             }
         } else { // We are saving
-            JFileChooser chooser = new JFileChooser();
-            chooser.setDialogTitle("Where should I save");
+            JFileChooser chooser = new JFileChooser(); // Create the file chooser.
+            chooser.setDialogTitle("Where should I save"); // Set the title.
             int selection = chooser.showSaveDialog(this.manager.frame);
 
-            if(selection == JFileChooser.APPROVE_OPTION) {
-                File saveLocation = chooser.getSelectedFile();
+            if(selection == JFileChooser.APPROVE_OPTION) { // If we didn't cancel
+                File saveLocation = chooser.getSelectedFile(); // Get the file path to save to.
                 try {
-                    this.manager.serialise(saveLocation.getAbsolutePath());
+                    this.manager.serialise(saveLocation.getAbsolutePath()); // Serialise into path.
                     this.manager.updateView();
                 } catch (Exception e) {
                     System.err.println("Failed to save. Did you choose a write protected location?");

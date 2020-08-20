@@ -13,3 +13,9 @@ To edit or delete a node, simply click on it.
 
 ## How to edit or delete a pipe.
 To edit or delete a pipe, simply click on it.
+
+## How to save your network.
+Click on the floppy disk icon at the top of the screen.
+
+## How to load a network.
+Click on the folder icon at top of the screen.
