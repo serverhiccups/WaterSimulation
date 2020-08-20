@@ -1,7 +1,7 @@
 # Water Simulation
 
 This is a piece of Java software that I have written that allows you to simulate a water network. In order to write this
-I have written my own sprite library for Java (JSprite), which allows me to elegantly build complex interfaces.
+I have written my own sprite library for Java (JSprite), it's pretty wacky, but it's what made a project of this complexity possible (for me at least).
 
 ### A note on the accuracy of the simulation.
 It may look sometimes that the flow is not going as intended (particular empty pipes where you think there shouldn't be).
@@ -17,3 +17,8 @@ of JSpriteVisual.
 * The different MouseHandler classes for all of the sprites. Most of the code in there is pretty simple, but elegantly
 functional.
 * EdmondsKarp - This is where I implemented all the code for actually simulating the flow of water.
+
+### Things to work on next
+* I would really like to be able to run the simulation using 'balanced' flow instead of maximum flow.
+
+Copyright serverhiccups 2020.
